@@ -1,13 +1,17 @@
 import hashlib
 import json
 import time
+from flask import Flask
+import requests
+
+
 
 class NimlothCoinBlock:
-    def __init__(self, previous_block_hash, transaction_list, timestamp, nonce=0):
+    def __init__(self, previous_block_hash, transaction_list, timestamp, ):
         self.previous_block_hash = previous_block_hash
         self.transactions_list = transaction_list
         self.timestamp = timestamp
-        self.nonce = nonce
+        self.nonce = 0
 
     def compute_hash(self):
         block_string = json.dumps(self.__dict__, sort_keys=True)
@@ -15,6 +19,9 @@ class NimlothCoinBlock:
 
 
 class Blockchain:
+
+    diffiiculty = 2
+
     def __init__(self):
         self.unconfirmed_transactions = []
         self.chain = []
@@ -29,9 +36,8 @@ class Blockchain:
     def last_block(self):
         return self.chain[-1]
 
-    diffiiculty = 2
     def proof_of_work(self, block):
-        block.nonce = 
+        block.nonce = 0
         computed_hash = block.compute_hash()
         while not computed_hash.startswith('0'*Blockchain.difficulty):
             block.nonce += 1
@@ -71,4 +77,14 @@ class Blockchain:
             self.unconfirmed_transactions = []
             return new_block.index
 
-
+app = Flask(__name__)
+blockchain = Blockchain()
+        
+@app.route('/chain', methods=['GET'])
+def get_chain():
+    chain_data = []
+    for block in blockchain.chain:
+        chain_data.append(block.__dict__)
+    return json.dumps({"length": len(chain_data),
+                       "chain": chain_data})
+app.run(debug=True, port=5000)
