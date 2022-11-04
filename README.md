@@ -1,5 +1,7 @@
-# python_blockchain
-pip install flask
-pip install flask-restful
+# Nimloth Blockchain
 
-broke something trying to make rest apis to use the network.  
+Exposed on localhost:8000
+
+`docker compose up` to start containers 
+`docker compose stop` to stop containers
+`docker compose down` to stop and remove containers
