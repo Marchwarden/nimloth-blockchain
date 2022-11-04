@@ -1,40 +1,37 @@
+from flask import Flask
+from dataclasses import dataclass, field
 import hashlib
 import json
 import time
-from flask import Flask
 import requests
 
+app = Flask(__name__)
 
-
+@dataclass
 class NimlothCoinBlock:
-    def __init__(self, previous_block_hash, transaction_list, timestamp, ):
-        self.previous_block_hash = previous_block_hash
-        self.transactions_list = transaction_list
-        self.timestamp = timestamp
-        self.nonce = 0
+    previous_block_hash: str
+    timestamp: str
+    nonce: int = 0 
+    transactions_list: list = field(default_factory=list)
 
-    def compute_hash(self):
+
+    def compute_hash(self) -> str:
         block_string = json.dumps(self.__dict__, sort_keys=True)
         return hashlib.sha256(block_string.encode()).hexdigest()
 
-
+@dataclass 
 class Blockchain:
-
-    diffiiculty = 2
-
-    def __init__(self):
-        self.unconfirmed_transactions = []
-        self.chain = []
+    unconfirmed_transactions: list = field(default_factory=list)
+    chain: list = field(default_factory=list)
+    difficulty: int = 2
+    
+    def __post_init__(self):
         self.create_genesis_block()
 
     def create_genesis_block(self):
         genesis_block = NimlothCoinBlock(0, [], time.time(), "0")
         genesis_block.hash = genesis_block.compute_hash()
         self.chain.append(genesis_block)
-
-    @property
-    def last_block(self):
-        return self.chain[-1]
 
     def proof_of_work(self, block):
         block.nonce = 0
@@ -55,29 +52,32 @@ class Blockchain:
         return True
 
     def is_valid_proof(self, block, block_hash):
-        return (block_hash.startswith('0'*Blockchain.diffiiculty) and 
+        return (block_hash.startswith('0'*Blockchain.difficulty) and 
                 block_hash == block.compute_hash())
     
     def add_new_transaction(self, transaction):
         self.unconfirmed_transactions.append(transaction)
 
-    def mine(self):
-            if not self.unconfirmed_transactions:
-                return False
+    # def mine(self):
+    #         if not self.unconfirmed_transactions:
+    #             return False
             
-            last_block = self.last_block
+    #         last_block = self.last_block
 
-            new_block = Block(index = last_block.index + 1,
-                              transactions = self.unconfirmed_transactions,
-                              timestamp = time.time(),
-                              previous_hash=last_block.hash)
+    #         new_block = Block(index = last_block.index + 1,
+    #                           transactions = self.unconfirmed_transactions,
+    #                           timestamp = time.time(),
+    #                           previous_hash=last_block.hash)
 
-            proof = self.proof_of_work(new_block)
-            self.add_block(new_block, proof)
-            self.unconfirmed_transactions = []
-            return new_block.index
+    #         proof = self.proof_of_work(new_block)
+    #         self.add_block(new_block, proof)
+    #         self.unconfirmed_transactions = []
+    #         return new_block.index
 
-app = Flask(__name__)
+    @property
+    def last_block(self):
+        return self.chain[-1]
+
 blockchain = Blockchain()
         
 @app.route('/chain', methods=['GET'])
@@ -85,6 +85,12 @@ def get_chain():
     chain_data = []
     for block in blockchain.chain:
         chain_data.append(block.__dict__)
-    return json.dumps({"length": len(chain_data),
-                       "chain": chain_data})
-app.run(debug=True, port=5000)
+
+    return json.dumps({"length": len(chain_data), "chain": chain_data})
+
+@app.route('/') 
+def test_message(): 
+    return 'Hello!'
+
+if __name__ == "__main__": 
+    app.run(debug=True, host='0.0.0.0')
