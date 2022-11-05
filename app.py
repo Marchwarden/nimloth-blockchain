@@ -1,44 +1,42 @@
-#from flask import Flask
+from flask import Flask
 from dataclasses import dataclass, field
 import hashlib
 import json
-import datetime
+import time
 import math
 import binascii
-
-#import numpy as np
-#import pandas as pd
+import numpy as np
+import pandas as pd
 import logging
 import collections
 
-import Crypto
-import Crypto.Random
-from Crypto.Cipher import PKCS1_v1_5
-from Crypto.PublicKey import RSA
-from Crypto import Random
+# import Crypto
+# import Crypto.Random
+# from Crypto.Cipher import PKCS1_v1_5
+# from Crypto.PublicKey import RSA
+# from Crypto import Random
 
 
-#app = Flask(__name__)
+app = Flask(__name__)
 
-@dataclass
-class Client:
-    def __init__(self):
-        random = Crypto.Random.new().read
-        self._private_key = RSA.generate(1024, random)
-        self._public_key = self._private_key.publickey()
-        self._signer = PKCS1_v1_5.new(self._private_key)
-    @property
-    def identity(self):
-        return
-        binascii.hexlify(self._public_key.exportKey(format='DER')).decode('ascii')
+# @dataclass
+# class Client:
+#     def __init__(self):
+#         random = Crypto.Random.new().read
+#         self._private_key = RSA.generate(1024, random)
+#         self._public_key = self._private_key.publickey()
+#         self._signer = PKCS1_v1_5.new(self._private_key)
+
+#     @property
+#     def identity(self):
+#         return binascii.hexlify(self._public_key.exportKey(format='DER')).decode('ascii')
 
 @dataclass
 class NimlothCoinBlock:
     previous_block_hash: str
-    timestamp: str
+    timestamp: float
     nonce: int = 0 
     transactions_list: list = field(default_factory=list)
-
 
     def compute_hash(self) -> str:
         block_string = json.dumps(self.__dict__, sort_keys=True)
@@ -54,7 +52,7 @@ class Blockchain:
         self.create_genesis_block()
 
     def create_genesis_block(self):
-        genesis_block = NimlothCoinBlock(0, [], datetime.time(), "0")
+        genesis_block = NimlothCoinBlock(0, [], time.time(), "0")
         genesis_block.hash = genesis_block.compute_hash()
         self.chain.append(genesis_block)
 
@@ -103,22 +101,20 @@ class Blockchain:
 #    def last_block(self):
 #
 
-#blockchain = Blockchain()
+blockchain = Blockchain()
         
-#@app.route('/chain', methods=['GET'])
-#def get_chain():
-#    chain_data = []
-#    for block in blockchain.chain:
-#        chain_data.append(block.__dict__)
-# 
-#     return json.dumps({"length": len(chain_data), "chain": chain_data})
+@app.route('/chain', methods=['GET'])
+def get_chain():
+    chain_data = []
+    for block in blockchain.chain:
+        chain_data.append(block.__dict__)
 
-#@app.route('/') 
-#def test_message(): 
-#    return 'Hello!'
-#
-#if __name__ == "__main__": 
-#    app.run(debug=True, host='0.0.0.0')
-#
-charles = Client()
-print(charles.identity)
+    return json.dumps({"length": len(chain_data), "chain": chain_data})
+
+@app.route('/') 
+def test_message(): 
+   return '<h1>Sup</h1>'
+
+if __name__ == "__main__": 
+   app.run(debug=True, host='0.0.0.0', port=8000)
+
