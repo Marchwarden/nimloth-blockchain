@@ -1,19 +1,36 @@
-from flask import Flask
+#from flask import Flask
 from dataclasses import dataclass, field
 import hashlib
 import json
 import datetime
+import math
+import binascii
 
-import rsa, binascii
-
-
-import numpy as np
-import pandas as pd
+#import numpy as np
+#import pandas as pd
 import logging
 import collections
 
+import Crypto
+import Crypto.Random
+from Crypto.Cipher import PKCS1_v1_5
+from Crypto.PublicKey import RSA
+from Crypto import Random
 
-app = Flask(__name__)
+
+#app = Flask(__name__)
+
+@dataclass
+class Client:
+    def __init__(self):
+        random = Crypto.Random.new().read
+        self._private_key = RSA.generate(1024, random)
+        self._public_key = self._private_key.publickey()
+        self._signer = PKCS1_v1_5.new(self._private_key)
+    @property
+    def identity(self):
+        return
+        binascii.hexlify(self._public_key.exportKey(format='DER')).decode('ascii')
 
 @dataclass
 class NimlothCoinBlock:
@@ -82,35 +99,26 @@ class Blockchain:
     #         self.unconfirmed_transactions = []
     #         return new_block.index
 
-    @property
-    def last_block(self):
-        return self.chain[-1]
+#    @property
+#    def last_block(self):
+#
 
-blockchain = Blockchain()
+#blockchain = Blockchain()
         
-@app.route('/chain', methods=['GET'])
-def get_chain():
-    chain_data = []
-    for block in blockchain.chain:
-        chain_data.append(block.__dict__)
+#@app.route('/chain', methods=['GET'])
+#def get_chain():
+#    chain_data = []
+#    for block in blockchain.chain:
+#        chain_data.append(block.__dict__)
+# 
+#     return json.dumps({"length": len(chain_data), "chain": chain_data})
 
-    return json.dumps({"length": len(chain_data), "chain": chain_data})
-
-@app.route('/') 
-def test_message(): 
-    return 'Hello!'
-
-if __name__ == "__main__": 
-    app.run(debug=True, host='0.0.0.0')
-
-@dataclass
-class Client:
-    def __init__(self):
-        random = hashlib.Random.new().read
-        self._private_key = rsa.generate(1024, random)
-        self._public_key = self._private_key.publickey()
-        self._signer = hashlib.new(self._private_key)
-    @property
-    def identify(self):
-        return
-binascii.hexlify(self._public_key.exportKey(format='DER')).decode('ascii')
+#@app.route('/') 
+#def test_message(): 
+#    return 'Hello!'
+#
+#if __name__ == "__main__": 
+#    app.run(debug=True, host='0.0.0.0')
+#
+charles = Client()
+print(charles.identity)

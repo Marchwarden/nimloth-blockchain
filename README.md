@@ -6,5 +6,5 @@ Exposed on localhost:8000
 `docker compose stop` to stop containers
 `docker compose down` to stop and remove containers
 
-pip install Crypto
-pip install rsa
+pip3 install Crypto
+pip3 install pycryptodome
