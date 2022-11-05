@@ -1,13 +1,12 @@
-#from flask import Flask
+from flask import Flask
 from dataclasses import dataclass, field
 import hashlib
 import json
 import datetime
 import math
 import binascii
-
-#import numpy as np
-#import pandas as pd
+import numpy as np
+import pandas as pd
 import logging
 import collections
 
@@ -18,7 +17,7 @@ from Crypto.PublicKey import RSA
 from Crypto import Random
 
 
-#app = Flask(__name__)
+app = Flask(__name__)
 
 @dataclass
 class Client:
@@ -27,10 +26,10 @@ class Client:
         self._private_key = RSA.generate(1024, random)
         self._public_key = self._private_key.publickey()
         self._signer = PKCS1_v1_5.new(self._private_key)
+
     @property
     def identity(self):
-        return
-        binascii.hexlify(self._public_key.exportKey(format='DER')).decode('ascii')
+        return binascii.hexlify(self._public_key.exportKey(format='DER')).decode('ascii')
 
 @dataclass
 class NimlothCoinBlock:
