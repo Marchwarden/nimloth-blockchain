@@ -2,8 +2,16 @@ from flask import Flask
 from dataclasses import dataclass, field
 import hashlib
 import json
-import time
-import requests
+import datetime
+
+import rsa, binascii
+
+
+import numpy as np
+import pandas as pd
+import logging
+import collections
+
 
 app = Flask(__name__)
 
@@ -29,7 +37,7 @@ class Blockchain:
         self.create_genesis_block()
 
     def create_genesis_block(self):
-        genesis_block = NimlothCoinBlock(0, [], time.time(), "0")
+        genesis_block = NimlothCoinBlock(0, [], datetime.time(), "0")
         genesis_block.hash = genesis_block.compute_hash()
         self.chain.append(genesis_block)
 
@@ -94,3 +102,15 @@ def test_message():
 
 if __name__ == "__main__": 
     app.run(debug=True, host='0.0.0.0')
+
+@dataclass
+class Client:
+    def __init__(self):
+        random = hashlib.Random.new().read
+        self._private_key = rsa.generate(1024, random)
+        self._public_key = self._private_key.publickey()
+        self._signer = hashlib.new(self._private_key)
+    @property
+    def identify(self):
+        return
+binascii.hexlify(self._public_key.exportKey(format='DER')).decode('ascii')
