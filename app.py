@@ -10,26 +10,31 @@ import pandas as pd
 import logging
 import collections
 
-# import Crypto
-# import Crypto.Random
-# from Crypto.Cipher import PKCS1_v1_5
-# from Crypto.PublicKey import RSA
-# from Crypto import Random
+from Crypto.PublicKey import RSA
+from Crypto.Random import get_random_bytes
+from Crypto.Cipher import PKCS1_OAEP
 
 
 app = Flask(__name__)
 
-# @dataclass
-# class Client:
-#     def __init__(self):
-#         random = Crypto.Random.new().read
-#         self._private_key = RSA.generate(1024, random)
-#         self._public_key = self._private_key.publickey()
-#         self._signer = PKCS1_v1_5.new(self._private_key)
+@dataclass
+class User:
+    def __init__(self):
+        self._private_key = RSA.generate(1024)
+        self._public_key = self._private_key.publickey()
+        self._signer = PKCS1_OAEP.new(self._private_key)
 
-#     @property
-#     def identity(self):
-#         return binascii.hexlify(self._public_key.exportKey(format='DER')).decode('ascii')
+    @property
+    def identity(self):
+        return binascii.hexlify(self._public_key.exportKey(format='DER')).decode('ascii')
+
+@dataclass
+class Transaction:
+    def __init__(self, sender, recipient, value):
+        self.sender = sender
+        self.recipient = recipient
+        self.value = value
+        self.time = time.time()
 
 @dataclass
 class NimlothCoinBlock:
@@ -111,9 +116,15 @@ def get_chain():
 
     return json.dumps({"length": len(chain_data), "chain": chain_data})
 
+charles = User()
+print(charles.identity)
+jack = User()
+print(jack.identity)
+
+
 @app.route('/') 
 def test_message(): 
-   return '<h1>Sup</h1>'
+   return '<h1>Sup1</h1>'
 
 if __name__ == "__main__": 
    app.run(debug=True, host='0.0.0.0', port=8000)
