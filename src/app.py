@@ -32,6 +32,7 @@ def display_transaction(transaction):
         print ('-----')
         print ('--------------')
 
+# TODO: this isn't correct 
 @app.route('/chain', methods=['GET'])
 def get_chain():
     chain_data = []
@@ -52,9 +53,9 @@ t0 = Transaction(
     500.0
 )
 
-block0 = NimlothBlock()
-block0.previous_block_hash = None
-Nonce = None
+# block0 = NimlothBlock()
+# block0.previous_block_hash = None
+# Nonce = None
 
 print("public key") 
 print(charles._public_key)
