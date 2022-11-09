@@ -15,47 +15,11 @@ from Crypto.Random import get_random_bytes
 from Crypto.Signature import pkcs1_15
 from Crypto.Hash import SHA
 
+from UserClass import User
+from TransactionClass import Transaction
 
 app = Flask(__name__)
 transactions = []
-
-@dataclass
-class User:
-    def __init__(self):
-        self._private_key = RSA.generate(1024)
-        self._public_key = self._private_key.publickey()
-        self._signer = pkcs1_15.new(self._private_key)
-
-    @property
-    def identity(self):
-        return binascii.hexlify(self._public_key.exportKey(format='DER')).decode('ascii')
-
-@dataclass
-class Transaction:
-    def __init__(self, sender, recipient, value):
-        self.sender = sender
-        self.recipient = recipient
-        self.value = value
-        self.time = time.time()
-
-    def to_dict(self):
-        if self.sender == "Genesis":
-            identity = "Genesis"
-        else:
-            identity = self.sender.identity
-        
-        return collections.OrderedDict({
-            'sender': identity,
-            'recipient': self.recipient,
-            'value': self.value,
-            'time': self.time })
-
-    def sign_transaction(self):
-        private_key = self.sender._private_key
-        signer = pkcs1_15.new(private_key)
-        h = SHA.new(str(self.to_dict()).encode('utf8'))
-        
-        return binascii.hexlify(signer.sign(h)).decode('ascii') 
 
 @dataclass
 class NimlothBlock:
