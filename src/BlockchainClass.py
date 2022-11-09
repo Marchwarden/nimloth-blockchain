@@ -1,5 +1,4 @@
 from dataclasses import dataclass, field
-import json
 import time
 
 from NimlothBlockClass import NimlothBlock
