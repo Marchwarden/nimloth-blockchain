@@ -12,17 +12,19 @@ import collections
 
 from Crypto.PublicKey import RSA
 from Crypto.Random import get_random_bytes
-from Crypto.Cipher import PKCS1_OAEP
+from Crypto.Signature import pkcs1_15
+from Crypto.Hash import SHA
 
 
 app = Flask(__name__)
+transactions = []
 
 @dataclass
 class User:
     def __init__(self):
         self._private_key = RSA.generate(1024)
         self._public_key = self._private_key.publickey()
-        self._signer = PKCS1_OAEP.new(self._private_key)
+        self._signer = pkcs1_15.new(self._private_key)
 
     @property
     def identity(self):
@@ -36,8 +38,27 @@ class Transaction:
         self.value = value
         self.time = time.time()
 
+    def to_dict(self):
+        if self.sender == "Genesis":
+            identity = "Genesis"
+        else:
+            identity = self.sender.identity
+        
+        return collections.OrderedDict({
+            'sender': identity,
+            'recipient': self.recipient,
+            'value': self.value,
+            'time': self.time })
+
+    def sign_transaction(self):
+        private_key = self.sender._private_key
+        signer = pkcs1_15.new(private_key)
+        h = SHA.new(str(self.to_dict()).encode('utf8'))
+        
+        return binascii.hexlify(signer.sign(h)).decode('ascii') 
+
 @dataclass
-class NimlothCoinBlock:
+class NimlothBlock:
     previous_block_hash: str
     timestamp: float
     nonce: int = 0 
@@ -57,7 +78,7 @@ class Blockchain:
         self.create_genesis_block()
 
     def create_genesis_block(self):
-        genesis_block = NimlothCoinBlock(0, [], time.time(), "0")
+        genesis_block = NimlothBlock(0, [], time.time(), "0")
         genesis_block.hash = genesis_block.compute_hash()
         self.chain.append(genesis_block)
 
@@ -116,12 +137,6 @@ def get_chain():
 
     return json.dumps({"length": len(chain_data), "chain": chain_data})
 
-charles = User()
-print(charles.identity)
-jack = User()
-print(jack.identity)
-
-
 @app.route('/') 
 def test_message(): 
    return '<h1>Sup1</h1>'
@@ -129,3 +144,33 @@ def test_message():
 if __name__ == "__main__": 
    app.run(debug=True, host='0.0.0.0', port=8000)
 
+def display_transaction(transaction):
+    for transaction in transactions:
+        dict = transaction.to_dict()
+        print ("sender: " + dict['sender'])
+        print ('-----')
+        print ("recipient: " + dict['recipient'])
+        print ('-----')
+        print ("value: " + str(dict['value']))
+        print ('-----')
+        print ("time: " + str(dict['time']))
+        print ('-----')
+        print ('--------------')
+
+
+charles = User()
+print(charles.identity)
+jack = User()
+print(jack.identity)
+
+t = Transaction(
+    charles,
+    jack.identity,
+    5.0
+)
+signature = t.sign_transaction()
+print(signature)
+
+transactions.append(t)
+
+display_transaction(t)
