@@ -10,99 +10,42 @@ import pandas as pd
 import logging
 import collections
 
-# import Crypto
-# import Crypto.Random
-# from Crypto.Cipher import PKCS1_v1_5
-# from Crypto.PublicKey import RSA
-# from Crypto import Random
+from Crypto.PublicKey import RSA
+from Crypto.Random import get_random_bytes
+from Crypto.Signature import pkcs1_15
+from Crypto.Hash import SHA
 
+from UserClass import User
+from TransactionClass import Transaction
+from NimlothBlockClass import NimlothBlock
+from BlockchainClass import Blockchain
 
 app = Flask(__name__)
 
-# @dataclass
-# class Client:
-#     def __init__(self):
-#         random = Crypto.Random.new().read
-#         self._private_key = RSA.generate(1024, random)
-#         self._public_key = self._private_key.publickey()
-#         self._signer = PKCS1_v1_5.new(self._private_key)
+NimlothBlockchain = Blockchain()
+transactions = []
+last_block_hash = ""
 
-#     @property
-#     def identity(self):
-#         return binascii.hexlify(self._public_key.exportKey(format='DER')).decode('ascii')
+@app.route('/') 
+def test_message(): 
+   return '<h1>Sup2</h1>'
 
-@dataclass
-class NimlothCoinBlock:
-    previous_block_hash: str
-    timestamp: float
-    nonce: int = 0 
-    transactions_list: list = field(default_factory=list)
+if __name__ == "__main__": 
+   app.run(debug=True, host='0.0.0.0', port=8000)
 
-    def compute_hash(self) -> str:
-        block_string = json.dumps(self.__dict__, sort_keys=True)
-        return hashlib.sha256(block_string.encode()).hexdigest()
+def display_transaction(transaction):
+    for transaction in transactions:
+        dict = transaction.to_dict()
+        print ("sender: " + dict['sender'])
+        print ('-----')
+        print ("recipient: " + dict['recipient'])
+        print ('-----')
+        print ("value: " + str(dict['value']))
+        print ('-----')
+        print ("time: " + str(dict['time']))
+        print ('-----')
+        print ('--------------')
 
-@dataclass 
-class Blockchain:
-    unconfirmed_transactions: list = field(default_factory=list)
-    chain: list = field(default_factory=list)
-    difficulty: int = 2
-    
-    def __post_init__(self):
-        self.create_genesis_block()
-
-    def create_genesis_block(self):
-        genesis_block = NimlothCoinBlock(0, [], time.time(), "0")
-        genesis_block.hash = genesis_block.compute_hash()
-        self.chain.append(genesis_block)
-
-    def proof_of_work(self, block):
-        block.nonce = 0
-        computed_hash = block.compute_hash()
-        while not computed_hash.startswith('0'*Blockchain.difficulty):
-            block.nonce += 1
-            computed_hash = block.compute_hash()
-        return computed_hash
-    
-    def add_block(self, block, proof):
-        previous_hash = self.last_block.hash
-        if previous_hash != block.previous_hash:
-            return False
-        if not self.is_valid_proof(block, proof):
-            return False
-        block.hash = proof
-        self.chain.append(block)
-        return True
-
-    def is_valid_proof(self, block, block_hash):
-        return (block_hash.startswith('0'*Blockchain.difficulty) and 
-                block_hash == block.compute_hash())
-    
-    def add_new_transaction(self, transaction):
-        self.unconfirmed_transactions.append(transaction)
-
-    # def mine(self):
-    #         if not self.unconfirmed_transactions:
-    #             return False
-            
-    #         last_block = self.last_block
-
-    #         new_block = Block(index = last_block.index + 1,
-    #                           transactions = self.unconfirmed_transactions,
-    #                           timestamp = time.time(),
-    #                           previous_hash=last_block.hash)
-
-    #         proof = self.proof_of_work(new_block)
-    #         self.add_block(new_block, proof)
-    #         self.unconfirmed_transactions = []
-    #         return new_block.index
-
-#    @property
-#    def last_block(self):
-#
-
-blockchain = Blockchain()
-        
 @app.route('/chain', methods=['GET'])
 def get_chain():
     chain_data = []
@@ -111,10 +54,36 @@ def get_chain():
 
     return json.dumps({"length": len(chain_data), "chain": chain_data})
 
-@app.route('/') 
-def test_message(): 
-   return '<h1>Sup</h1>'
 
-if __name__ == "__main__": 
-   app.run(debug=True, host='0.0.0.0', port=8000)
+charles = User()
+print(charles.identity)
+jack = User()
+print(jack.identity)
 
+t0 = Transaction(
+    "Genesis",
+    charles.identity,
+    500.0
+)
+
+block0 = NimlothBlock()
+block0.previous_block_hash = None
+Nonce = None
+
+print("public key") 
+print(charles._public_key)
+print("Private Key")
+print(charles._private_key)
+print(" Identity") 
+print(charles.identity)
+
+#block0.verified_transactions_list.append(t0)
+#digest = hash(block0)
+#last_block_hash = digest
+
+#NimlothBlockchain.append(block0)
+
+#signature = t0.sign_transaction()
+#print(signature)
+#transactions.append(t)
+#display_transaction(t)
