@@ -1,6 +1,6 @@
 # Nimloth Blockchain
 
-Exposed on localhost:8000
+Exposed on `localhost:8000`
 
 `docker compose up` to start containers<br/>
 `docker compose stop` to stop containers<br/>
@@ -10,3 +10,6 @@ pip3 install pycryptodome
 
 docker compose build 
 rebuilds the image.  
+
+`pip3 install black pylint pre-commit`
+`pre-commit install` to install pre-commit hooks 
