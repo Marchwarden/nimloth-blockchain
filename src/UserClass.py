@@ -7,7 +7,6 @@ from Crypto.Hash import SHA
 
 # TODO: are these attributes meant to be immutable?
 
-@dataclass
 class User:
     # _private_key: RSA.RsaKey = RSA.generate(1024)
     # _public_key: RSA.RsaKey = _private_key.publickey()
