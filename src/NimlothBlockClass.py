@@ -1,4 +1,3 @@
-import time
 from dataclasses import dataclass, field
 import json
 
@@ -9,11 +8,10 @@ from Crypto.Hash import SHA
 
 @dataclass
 class NimlothBlock:
-    def __init__(self):
-        self.previous_block_hash: str
-        self.timestamp: float
-        self.nonce: int = 0 
-        self.verified_transactions_list: list = field(default_factory=list)
+    previous_block_hash: str
+    timestamp: float
+    nonce: int = 0 
+    verified_transactions_list: list = field(default_factory=list)
 
     def compute_hash(self) -> str:
         block_string = json.dumps(self.__dict__, sort_keys=True)
