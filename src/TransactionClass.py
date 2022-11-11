@@ -1,5 +1,5 @@
-import time
-from dataclasses import dataclass, field
+import time as _time
+from dataclasses import dataclass
 import binascii
 import collections
 
@@ -10,13 +10,13 @@ from Crypto.Hash import SHA
 
 @dataclass
 class Transaction:
-    def __init__(self, sender, recipient, value):
-        self.sender = sender
-        self.recipient = recipient
-        self.value = value
-        self.time = time.time()
+    sender: str
+    recipient: str 
+    value: float 
+    time: float = _time.time() 
 
-    def to_dict(self):
+    # TODO: what is the identity property?
+    def to_dict(self) -> collections.OrderedDict:
         if self.sender == "Genesis":
             identity = "Genesis"
         else:
@@ -28,9 +28,9 @@ class Transaction:
             'value': self.value,
             'time': self.time })
 
-    def sign_transaction(self):
+    def sign_transaction(self) -> str:
         private_key = self.sender._private_key
         signer = pkcs1_15.new(private_key)
-        h = SHA.new(str(self.to_dict()).encode('utf8'))
+        h = SHA.new(str(self.to_dict()).encode('utf8')) # change var name
         
         return binascii.hexlify(signer.sign(h)).decode('ascii') 
