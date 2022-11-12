@@ -14,7 +14,7 @@ class Transaction:
     recipient: str 
     value: float 
     time: float = _time.time() 
-
+#add cointype, blockgroup, ether chain information, other arbitrary info
     # TODO: what is the identity property?
     def to_dict(self) -> collections.OrderedDict:
         if self.sender == "Genesis":
@@ -34,3 +34,4 @@ class Transaction:
         h = SHA.new(str(self.to_dict()).encode('utf8')) # change var name
         
         return binascii.hexlify(signer.sign(h)).decode('ascii') 
+    

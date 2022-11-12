@@ -20,3 +20,5 @@ class User:
     @property
     def identity(self) -> str:
         return binascii.hexlify(self._public_key.exportKey(format='DER')).decode('ascii')
+    #add authorization and authentification
+    #I.E. proof of stake, proof of access to resourses, proof of authroization of transaction

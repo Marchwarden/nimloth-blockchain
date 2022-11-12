@@ -10,10 +10,11 @@ class Blockchain:
 
     def __post_init__(self):
         self.create_genesis_block()
-
+    #initialization of chain for blockchain
     # TODO: hash is not a property of block 
     def create_genesis_block(self) -> None:
-        genesis_block = NimlothBlock(0, [], time.time(), "0")
+        genesis_block = NimlothBlock(0, [], time.time(), "0")#change argument order
+        
         genesis_block.hash = genesis_block.compute_hash()
         self.chain.append(genesis_block)
 
@@ -27,6 +28,7 @@ class Blockchain:
     
     # TODO: type proof parameter 
     # TODO: hash is not a property of block 
+    #possibly have it return the block rather than a bool
     def add_block(self, block: NimlothBlock, proof) -> bool:
         previous_hash = self.last_block.hash
         if previous_hash != block.previous_hash:
@@ -45,3 +47,9 @@ class Blockchain:
     # TODO: type transaction parameter 
     def add_new_transaction(self, transaction) -> None:
         self.unconfirmed_transactions.append(transaction)
+
+    #add overall blockchain check(\)
+    #add variable nonce value 
+    #add node registration
+    #conflict resolution 
+    #payment verification full and simple implementation
