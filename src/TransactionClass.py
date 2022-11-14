@@ -27,7 +27,20 @@ class Transaction:
             'recipient': self.recipient,
             'value': self.value,
             'time': self.time })
-
+    def display_transaction(transactions):
+        for transaction in transactions:
+            dict = transaction.to_dict()
+            print ("sender: " + dict['sender'])
+            print ('-----')
+            print ("recipient: " + dict['recipient'])
+            print ('-----')
+            print ("value: " + str(dict['value'])) 
+            print ('-----') 
+            print ("time: " + str(dict['time'])) 
+            print ('-----')   
+            print ('--------------')
+            
+    
     def sign_transaction(self) -> str:
         private_key = self.sender._private_key
         signer = pkcs1_15.new(private_key)

@@ -58,6 +58,7 @@ class Blockchain:
     def add_new_transaction(self, transaction) -> None:
         self.unconfirmed_transactions.append(transaction)
 
+    
     #add overall blockchain check(\)
     #add variable nonce value 
     #add node registration
