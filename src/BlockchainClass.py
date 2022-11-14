@@ -1,12 +1,17 @@
-from dataclasses import dataclass, field
 import time
+import urllib.parse
+
+from dataclasses import dataclass, field
+
 from NimlothBlockClass import NimlothBlock
+
 
 @dataclass 
 class Blockchain:
     unconfirmed_transactions: list = field(default_factory=list)
     chain: list = field(default_factory=list)
     difficulty: int = 2
+    nodes = set()
 
     def __post_init__(self):
         self.create_genesis_block()
@@ -17,6 +22,11 @@ class Blockchain:
         
         genesis_block.hash = genesis_block.compute_hash()
         self.chain.append(genesis_block)
+    
+    def register_node(self, address):
+        passed_url = urllib.parse.urlparse(address)
+        self.nodes.add(passed_url.netloc)
+    #conflic resolution 
 
     def proof_of_work(self, block: NimlothBlock) -> str:
         block.nonce = 0
