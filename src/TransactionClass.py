@@ -13,8 +13,10 @@ class Transaction:
     sender: str
     recipient: str 
     value: float 
+    coinType: str  # Need to implement control and security protocols to check b4 compiled into blocks. 
     time: float = _time.time() 
-#add cointype, blockgroup, ether chain information, other arbitrary info
+    #add cointype, blockgroup, ether chain information, other arbitrary info
+
     # TODO: what is the identity property?
     def to_dict(self) -> collections.OrderedDict:
         if self.sender == "Genesis":
@@ -26,7 +28,9 @@ class Transaction:
             'sender': identity,
             'recipient': self.recipient,
             'value': self.value,
-            'time': self.time })
+            'time': self.time, 
+            'coinType': self.coinType})
+
     def display_transaction(transactions):
         for transaction in transactions:
             dict = transaction.to_dict()
