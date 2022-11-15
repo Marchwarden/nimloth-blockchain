@@ -1,5 +1,5 @@
 from flask import Flask
-import BlockchainClass
+from BlockchainClass import Blockchain
 app = Flask(__name__)
 
 # Generate a globally unique address for this node
