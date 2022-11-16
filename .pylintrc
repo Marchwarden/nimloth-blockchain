@@ -1,3 +1,10 @@
 [MESSAGES CONTROL]
 
-disable=missing-module-docstring,missing-class-docstring,missing-function-docstring,line-too-long,unused-import,fixme,W,too-few-public-methods
+disable=
+  missing-module-docstring,
+  missing-class-docstring,
+  missing-function-docstring,
+  line-too-long,unused-import,
+  fixme,
+  W,
+  too-few-public-methods
