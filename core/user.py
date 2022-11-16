@@ -7,12 +7,13 @@ from Crypto.Hash import SHA
 
 # TODO: are these attributes meant to be immutable?
 
+
 class User:
     # _private_key: RSA.RsaKey = RSA.generate(1024)
     # _public_key: RSA.RsaKey = _private_key.publickey()
     # _signer: pkcs1_15.PKCS115_SigScheme = pkcs1_15.new(_private_key)
-    #multi layer encryption 
-        #dependant on account information different encryption systems are used, and then account recovery questions are used as keywords for further private generation
+    # multi layer encryption
+    # dependant on account information different encryption systems are used, and then account recovery questions are used as keywords for further private generation
     def __init__(self):
         self._private_key = RSA.generate(1024)
         self._public_key = self._private_key.publickey()
@@ -20,6 +21,9 @@ class User:
 
     @property
     def identity(self) -> str:
-        return binascii.hexlify(self._public_key.exportKey(format='DER')).decode('ascii')
-    #add authorization and authentification
-    #I.E. proof of stake, proof of access to resourses, proof of authroization of transaction
+        return binascii.hexlify(self._public_key.exportKey(format="DER")).decode(
+            "ascii"
+        )
+
+    # add authorization and authentification
+    # I.E. proof of stake, proof of access to resourses, proof of authroization of transaction
