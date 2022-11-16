@@ -6,7 +6,7 @@ COPY requirements.txt requirements.txt
 
 RUN pip3 install -r requirements.txt
 
-CMD ["flask", "--app", "core", "--debug", "run", "--host=0.0.0.0"]
+CMD ["flask", "--app", ".", "--debug", "run", "--host=0.0.0.0"]
 
 
 
