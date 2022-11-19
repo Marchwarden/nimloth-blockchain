@@ -6,7 +6,7 @@ services:
     ports:
       - "8000:5000"
     volumes: 
-      - ./:/app
+      - ./core/:/app
 
    
 
