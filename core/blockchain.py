@@ -4,7 +4,7 @@ import urllib.parse
 
 from dataclasses import dataclass, field
 
-from block import NimlothBlock
+from .block import NimlothBlock
 
 
 @dataclass

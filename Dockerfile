@@ -1,10 +1,11 @@
 FROM python:3.11.0-bullseye
 
-WORKDIR /app 
+WORKDIR /app
 
-COPY requirements.txt requirements.txt 
+COPY Pipfile Pipfile.lock ./
 
-RUN pip3 install -r requirements.txt
+RUN pip install pipenv && \
+  pipenv install --system --ignore-pipfile
 
 CMD ["flask", "--app", ".", "--debug", "run", "--host=0.0.0.0"]
 
