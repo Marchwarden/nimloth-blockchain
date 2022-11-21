@@ -7,5 +7,5 @@ def test_config():
 
 
 def test_hello(client):
-    response = client.get("/hello")
+    response = client.get("/")
     assert response.data == b"Hello, World!"
