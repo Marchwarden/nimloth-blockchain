@@ -1,28 +1,23 @@
 import time
 from urllib import request
 import urllib.parse
-
 from dataclasses import dataclass, field
-
-from block import NimlothBlock
+from core.block import NimlothBlock
 
 
 @dataclass
 class Blockchain:
     unconfirmed_transactions: list = field(default_factory=list)
-    chain: list = field(default_factory=list)
+    chain: list = field(default_factory=list)  # TODO: we shouldn't use a list?
     difficulty: int = 2
     nodes = set()
 
     def __post_init__(self):
-        self.create_genesis_block()
+        self.__create_genesis_block()
 
-    # initialization of chain for blockchain
     # TODO: hash is not a property of block
-    def create_genesis_block(self) -> None:
-        genesis_block = NimlothBlock(0, [], time.time(), "0")  # change argument order
-
-        genesis_block.hash = genesis_block.compute_hash()
+    def __create_genesis_block(self) -> None:
+        genesis_block = NimlothBlock(0, time.time())
         self.chain.append(genesis_block)
 
     def register_node(self, address):
