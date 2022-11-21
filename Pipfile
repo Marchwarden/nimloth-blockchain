@@ -11,6 +11,8 @@ pycryptodome = "*"
 black = "*"
 pylint = "*"
 pre-commit = "*"
+pytest = "*"
+coverage = "*"
 
 [requires]
 python_version = "3.9"
