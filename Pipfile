@@ -6,6 +6,8 @@ name = "pypi"
 [packages]
 flask = "*"
 pycryptodome = "*"
+e = "*"
+nimloth-blockchain = {path = "."}
 
 [dev-packages]
 black = "*"

@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "b010f74f62cd596e2fa85356c2ae57d972378b371e8eff48c690274e4be284a5"
+            "sha256": "c82d505b9f08b108302139442e57bfac42cd7f9578f9dfb47febc9f4db98e9b1"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -23,6 +23,13 @@
             ],
             "markers": "python_version >= '3.7'",
             "version": "==8.1.3"
+        },
+        "e": {
+            "hashes": [
+                "sha256:1ce64149fd260237e8f53d5b4863466875594e77341ec47d340c0d2c6d3b5942"
+            ],
+            "index": "pypi",
+            "version": "==1.4.5"
         },
         "flask": {
             "hashes": [
@@ -101,6 +108,10 @@
             ],
             "markers": "python_version >= '3.7'",
             "version": "==2.1.1"
+        },
+        "nimloth-blockchain": {
+            "path": ".",
+            "version": "==1.0.0"
         },
         "pycryptodome": {
             "hashes": [
