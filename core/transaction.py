@@ -8,6 +8,8 @@ from Crypto.Random import get_random_bytes
 from Crypto.Signature import pkcs1_15
 from Crypto.Hash import SHA
 
+import coinList
+import networkList
 
 @dataclass
 class Transaction:
@@ -15,6 +17,7 @@ class Transaction:
     recipient: str
     value: float
     coin_type: str  # Need to implement control and security protocols to check b4 compiled into blocks.
+    network: str
     time: float = _time.time()
     # add cointype, blockgroup, ether chain information, other arbitrary info
 
@@ -32,6 +35,7 @@ class Transaction:
                 "value": self.value,
                 "time": self.time,
                 "coinType": self.coin_type,
+                "network": self.network
             }
         )
 
@@ -55,3 +59,26 @@ class Transaction:
         hash = SHA.new(str(self.to_dict()).encode("utf8"))  # change var name
 
         return binascii.hexlify(signer.sign(hash)).decode("ascii")
+
+#basic idea of system to check if the transaction is possible before execution.
+#prevents customers from sending money into the void by accident.
+
+    def validate_coinType(self):   
+        if self.coin_type in coinList:
+            coin_type_valid == True
+        else:
+            coin_type_valid == False
+
+    def validate_network(self):   
+        if self.network in networkList:
+            network_valid == True
+        else:
+            network_valid == False
+
+    def parameters_valid(self):
+        if coin_type_valid and network_valid == True:
+            transactionParameters == True
+        else:
+            transactionParameters == False
+
+            
