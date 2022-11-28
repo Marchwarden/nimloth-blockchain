@@ -1,21 +1,24 @@
+import json
 import time as _time
 from dataclasses import dataclass
 import binascii
 import collections
 
-from Crypto.PublicKey import RSA
-from Crypto.Random import get_random_bytes
-from Crypto.Signature import pkcs1_15
-from Crypto.Hash import SHA
+from Crypto.PublicKey import RSA  # pylint: disable=import-error
+from Crypto.Random import get_random_bytes  # pylint: disable=import-error
+from Crypto.Signature import pkcs1_15  # pylint: disable=import-error
+from Crypto.Hash import SHA  # pylint: disable=import-error
 
 
 @dataclass
 class Transaction:
+
     sender: any  # TODO: Change
     recipient: str
     value: float
     coin_type: str  # Need to implement control and security protocols to check b4 compiled into blocks.
     time: float = _time.time()
+
     # add cointype, blockgroup, ether chain information, other arbitrary info
 
     # TODO: what is the identity property?
