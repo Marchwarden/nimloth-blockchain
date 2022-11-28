@@ -1,13 +1,32 @@
-FROM python:3.11.0-bullseye
+FROM python:3.9-slim-bullseye AS builder
 
-WORKDIR /app
+RUN pip install --user pipenv
 
-COPY Pipfile Pipfile.lock ./
+ENV PIPENV_VENV_IN_PROJECT=1
 
-RUN pip install pipenv && \
-  pipenv install --system --ignore-pipfile
+COPY Pipfile.lock /usr/src/
+COPY Pipfile /usr/src/
 
-CMD ["flask", "--app", ".", "--debug", "run", "--host=0.0.0.0"]
+WORKDIR /usr/src/
+
+RUN /root/.local/bin/pipenv sync
+
+FROM python:3.9-slim-bullseye AS runtime 
+
+RUN mkdir -v /usr/src/.venv
+
+COPY --from=builder /usr/src/.venv/ /usr/src/.venv/
+
+RUN useradd --create-home nimloth
+
+ADD run.py /usr/src/
+
+WORKDIR /usr/src/
+
+USER nimloth 
+
+ENTRYPOINT [ "./.venv/bin/python" ]
+CMD ["run.py"]
 
 
 
