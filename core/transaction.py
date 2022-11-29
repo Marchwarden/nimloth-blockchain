@@ -60,25 +60,27 @@ class Transaction:
 
         return binascii.hexlify(signer.sign(hash)).decode("ascii")
 
-#basic idea of system to check if the transaction is possible before execution.
+#basic idea of system to check if the transaction is possible before initial creation by user.
 #prevents customers from sending money into the void by accident.
 
-    def validate_coinType(self):   
+    def validate_coinType(self: str) -> bool:   
         if self.coin_type in coinList:
             coin_type_valid == True
         else:
             coin_type_valid == False
+        return(coin_type_valid)
 
-    def validate_network(self):   
+    def validate_network(self: str) -> bool:   
         if self.network in networkList:
             network_valid == True
         else:
             network_valid == False
+        return(network_valid)
 
-    def parameters_valid(self):
+    def parameters_valid(self: str) -> bool:
         if coin_type_valid and network_valid == True:
             transactionParameters == True
         else:
             transactionParameters == False
-
+        return(transactionParameters)
             
