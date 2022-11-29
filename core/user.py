@@ -15,7 +15,8 @@ class User:
     # multi layer encryption
     # dependant on account information different encryption systems are used, and then account recovery questions are used as keywords for further private generation
     def __init__(self):
-        self._private_key = RSA.generate(1024)
+        randomBytes = get_random_bytes(32)
+        self._private_key = RSA.generate(1024*randomBytes)
         self._public_key = self._private_key.publickey()
         self._signer = pkcs1_15.new(self._private_key)
 
