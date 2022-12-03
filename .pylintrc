@@ -4,7 +4,8 @@ disable=
   missing-module-docstring,
   missing-class-docstring,
   missing-function-docstring,
-  line-too-long,unused-import,
+  line-too-long,
+  unused-import,
   fixme,
   W,
   too-few-public-methods
