@@ -8,11 +8,14 @@ from Crypto.Random import get_random_bytes
 from Crypto.Signature import pkcs1_15
 from Crypto.Hash import SHA
 
-import coinList
-import networkList
+from .supportedCoins import coinList, networkList
+
 
 @dataclass
 class Transaction:
+    # pylint: disable=too-many-instance-attributes
+    # Eight is reasonable in this case.
+
     sender: any  # TODO: Change
     recipient: str
     value: float
@@ -35,7 +38,7 @@ class Transaction:
                 "value": self.value,
                 "time": self.time,
                 "coinType": self.coin_type,
-                "network": self.network
+                "network": self.network,
             }
         )
 
@@ -60,27 +63,12 @@ class Transaction:
 
         return binascii.hexlify(signer.sign(hash)).decode("ascii")
 
-#basic idea of system to check if the transaction is possible before initial creation by user.
-#prevents customers from sending money into the void by accident.
+    # basic idea of system to check if the transaction is possible before initial creation by user.
+    # prevents customers from sending money into the void by accident.
+    def check_valid(self, proposed, verified):
+        self.proposed = proposed
+        self.verified = verified
 
-    def validate_coinType(self: str) -> bool:   
-        if self.coin_type in coinList:
-            coin_type_valid == True
-        else:
-            coin_type_valid == False
-        return(coin_type_valid)
-
-    def validate_network(self: str) -> bool:   
-        if self.network in networkList:
-            network_valid == True
-        else:
-            network_valid == False
-        return(network_valid)
-
-    def parameters_valid(self: str) -> bool:
-        if coin_type_valid and network_valid == True:
-            transactionParameters == True
-        else:
-            transactionParameters == False
-        return(transactionParameters)
-            
+        if self.proposed in self.verified:
+            return True
+        return False
