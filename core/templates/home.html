@@ -1,0 +1,34 @@
+
+<html>
+   <body>
+      
+      <form action = "http://localhost:8000/home" method = "post">
+         <p><h2>Blockchain is currently running</h2></p>
+         <p><h1>TESTdING</h1><p>
+         <p>Username:</p>
+         <p><input type = "text" name = "name" /></p>
+         <p><input type = "submit" name = "submit_button" value = "add_current_block" /></p>
+         
+         <p><input type = "text" name = "sender" value = "sender" /></p>
+         <p><input type = "text" name = "reciever" value = "reciever" /></p>
+         <p><input type = "text" name = "amount" value = "amount" /></p>
+         <p><input type = "text" name = "coin" value = "coin" /></p>
+         <p><input type = "submit" name = "submit_button" value = "add_transaction" /></p>
+      </form>
+      <table border =1 >
+        
+
+         <tr>
+            <th> {{ "this is the current block"}} </th>
+            <td> {{ current_block.hash}} </td>
+         </tr>
+         <tr>
+            <th> {{ "this is the previous block hash"}} </th>
+            <td> {{ block_chain.printhash()}} </td>
+         </tr>
+         
+    
+      </table>
+   </body>
+   
+</html>

@@ -6,6 +6,9 @@ name = "pypi"
 [packages]
 flask = "*"
 pycryptodome = "*"
+flask-pymongo = "*"
+pymongo = "*"
+flask-sqlalchemy = "*"
 
 [dev-packages]
 black = "*"

@@ -1,5 +1,5 @@
 import pytest
-from core import create_app
+from core import create_app  # pylint: disable=import-error
 
 
 @pytest.fixture

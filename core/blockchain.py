@@ -20,7 +20,9 @@ class Blockchain:
     # initialization of chain for blockchain
     # TODO: hash is not a property of block
     def create_genesis_block(self) -> None:
-        genesis_block = NimlothBlock(0, [], time.time(), "0")  # change argument order
+        genesis_block = NimlothBlock(
+            "null", "0", time.time(), 0, []
+        )  # change argument order
 
         genesis_block.hash = genesis_block.compute_hash()
         self.chain.append(genesis_block)
@@ -61,6 +63,7 @@ class Blockchain:
 
     def proof_of_work(self, block: NimlothBlock) -> str:
         block.nonce = 0
+        block.verified_transactions_list = self.unconfirmed_transactions
         computed_hash = block.compute_hash()
         while not computed_hash.startswith("0" * Blockchain.difficulty):
             block.nonce += 1
@@ -71,13 +74,16 @@ class Blockchain:
     # TODO: hash is not a property of block
     # possibly have it return the block rather than a bool
     def add_block(self, block: NimlothBlock, proof) -> bool:
-        previous_hash = None  # self.last_block.hash
-        if previous_hash != block.previous_hash:
+        previous_hash = block.previous_block_hash  # self.last_block.hash
+        if previous_hash != block.previous_block_hash:
             return False
-        if not self.is_valid_proof(block, proof):
+        if self.is_valid_proof(block, proof):
+            block.verified_transactions_list = []
             return False
         block.hash = proof
+        self.unconfirmed_transactions = []
         self.chain.append(block)
+        self.unconfirmed_transactions.clear()
         return True
 
     # TODO: type block_hash parameter
@@ -90,6 +96,10 @@ class Blockchain:
     # TODO: type transaction parameter
     def add_new_transaction(self, transaction) -> None:
         self.unconfirmed_transactions.append(transaction)
+
+    def printhash(self) -> str:
+        latestblock = self.chain[len(self.chain) - 1]
+        return latestblock.hash
 
     # add overall blockchain check(\)
     # add variable nonce value
