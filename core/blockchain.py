@@ -5,6 +5,7 @@ import urllib.parse
 from dataclasses import dataclass, field
 
 from .block import NimlothBlock
+from .transaction_tree import Node, Transactiontree
 
 
 @dataclass
@@ -72,6 +73,10 @@ class Blockchain:
     # possibly have it return the block rather than a bool
     def add_block(self, block: NimlothBlock, proof) -> bool:
         previous_hash = None  # self.last_block.hash
+        merkletree = Transactiontree(self.unconfirmed_transactions)
+        merkletree.hash_transactions(self.unconfirmed_transactions)
+        merkletree.build_merkle_tree()
+        block.transaction_node
         if previous_hash != block.previous_hash:
             return False
         if not self.is_valid_proof(block, proof):
