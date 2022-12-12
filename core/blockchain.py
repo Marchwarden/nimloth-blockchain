@@ -101,6 +101,10 @@ class Blockchain:
         latestblock = self.chain[len(self.chain) - 1]
         return latestblock.hash
 
+    def print_all_chain(self) -> str:
+        for i in len(self.chain):
+            return self.chain[i]
+
     # add overall blockchain check(\)
     # add variable nonce value
     # add node registration

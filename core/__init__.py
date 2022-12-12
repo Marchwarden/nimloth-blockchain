@@ -74,6 +74,8 @@ def create_app(test_config=None):
 
     @app.route("/display/")
     def display():
-        return render_template("display.html")
+        return render_template(
+            "display.html", block_chain=block_chain, current_block=current_block
+        )
 
     return app
