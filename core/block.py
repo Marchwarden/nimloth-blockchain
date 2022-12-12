@@ -26,3 +26,13 @@ class NimlothBlock:
         self.timestamp = 0
         self.nonce = 0
         self.verified_transactions_list = []
+
+    def __repr__(self):
+        return (
+            "Block("
+            f"previous_block_hash: {self.previous_block_hash},"
+            f"hash: {self.hash}"
+            f"timestamp: {self.timestamp}, "
+            f"nonce: {self.nonce}, "
+            f"verified_transaction_list: {self.verified_transactions_list}, "
+        )
