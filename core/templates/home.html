@@ -3,6 +3,16 @@
    <body>
       
       <form action = "http://localhost:8000/home" method = "post">
+         <div>
+            <p><h1>Navigation</h1></p>
+               <strong><nav>
+                  <ul class = "menu">
+                     <li><a href = "{{url_for('home') }}">Home</a></li>
+                     <li><a href = "{{url_for('display') }}">Display</a></li>
+                  </ul>
+               </nav></strong>
+
+         </div>
          <p><h2>Blockchain is currently running</h2></p>
          <p><h1>TESTdING</h1><p>
          <p>Username:</p>
@@ -11,7 +21,7 @@
          
          <p><input type = "text" name = "sender" value = "sender" /></p>
          <p><input type = "text" name = "reciever" value = "reciever" /></p>
-         <p><input type = "text" name = "amount" value = "amount" /></p>
+         <p><input type = "number" name = "amount" value = "amount" min ="1" max="10" /></p>
          <p><input type = "text" name = "coin" value = "coin" /></p>
          <p><input type = "submit" name = "submit_button" value = "add_transaction" /></p>
       </form>
