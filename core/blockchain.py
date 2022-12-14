@@ -5,6 +5,7 @@ import urllib.parse
 from dataclasses import dataclass, field
 
 from .block import NimlothBlock
+from .transaction import Transaction
 
 
 @dataclass
@@ -94,8 +95,10 @@ class Blockchain:
         )
 
     # TODO: type transaction parameter
-    def add_new_transaction(self, transaction) -> None:
-        self.unconfirmed_transactions.append(transaction)
+    def add_new_transaction(self, transaction: Transaction, signature: str) -> None:
+        if signature == transaction.sign_transaction():
+            self.unconfirmed_transactions.append(transaction)
+        return False
 
     def printhash(self) -> str:
         latestblock = self.chain[len(self.chain) - 1]
