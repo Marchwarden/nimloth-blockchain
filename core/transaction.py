@@ -35,18 +35,15 @@ class Transaction:
             }
         )
 
-    def display_transaction(self, transactions):
-        for transaction in transactions:
-            dict = transaction.to_dict()
-            print("sender: " + dict["sender"])
-            print("-----")
-            print("recipient: " + dict["recipient"])
-            print("-----")
-            print("value: " + str(dict["value"]))
-            print("-----")
-            print("time: " + str(dict["time"]))
-            print("-----")
-            print("--------------")
+    def __repr__(self):
+        return (
+            "Transaction("
+            f"sender: {self.sender},"
+            f"recipient: {self.recipient}"
+            f"value: {self.value}, "
+            f"coin_type: {self.coin_type}, "
+            f"time: {self.time}, "
+        )
 
     # TODO: this should not work
     def sign_transaction(self) -> str:

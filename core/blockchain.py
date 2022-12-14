@@ -105,6 +105,9 @@ class Blockchain:
         for i in len(self.chain):
             return self.chain[i]
 
+    def print_unconfirmed_transactions(self):
+        return self.unconfirmed_transactions
+
     # add overall blockchain check(\)
     # add variable nonce value
     # add node registration
