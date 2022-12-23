@@ -8,6 +8,13 @@ from Crypto.Random import get_random_bytes
 from Crypto.Signature import pkcs1_15
 from Crypto.Hash import SHA
 
+@dataclass
+class Transaction_data:
+   def __init__(self):
+        recipient: str
+        coin: str
+        value: str
+
 
 @dataclass
 class Transaction:
@@ -48,10 +55,12 @@ class Transaction:
             print("-----")
             print("--------------")
 
-    # TODO: this should not work
-    def sign_transaction(self) -> str:
+    # TODO: this is an old transaction signing
+    def sign_transaction(self, privatekey, signature) -> str:
         private_key = self.sender._private_key
         signer = pkcs1_15.new(private_key)
         hash = SHA.new(str(self.to_dict()).encode("utf8"))  # change var name
 
         return binascii.hexlify(signer.sign(hash)).decode("ascii")
+
+   
