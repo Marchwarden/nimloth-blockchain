@@ -1,4 +1,5 @@
 from flask import Flask, request, url_for, redirect, render_template
+from flask_mysqldb import MySQL
 from .blockchain import Blockchain
 from .block import NimlothBlock
 
@@ -8,6 +9,7 @@ def create_app(test_config=None):
     app.config.from_mapping(
         SECRET_KEY="dev",
     )
+    mysql =MySQL(app)
 
     block_chain = Blockchain([], [], 2)
     current_block = NimlothBlock("null", block_chain.printhash(), 0.0, 0, [])

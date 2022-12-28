@@ -10,11 +10,13 @@ from Crypto.Hash import SHA
 # possible imuttability imporvement add transaction hash AKA take current transaction and previous hash to create new hash which is used within block hash,
 @dataclass
 class NimlothBlock:
+    index: int
     hash: str
     previous_block_hash: str
     timestamp: float
     nonce: int = 0
     verified_transactions_list: list = field(default_factory=list)
+    
 
     def compute_hash(self) -> str:
         block_string = json.dumps(self.__dict__, sort_keys=True)
