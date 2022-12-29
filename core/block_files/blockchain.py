@@ -1,17 +1,19 @@
 import time
+import json
 from urllib import request
 import urllib.parse
 
+
 from dataclasses import dataclass, field
-
+from dataclasses_json import dataclass_json
 from .block import NimlothBlock
-from .transaction_tree import Node, Transactiontree
 
 
+@dataclass_json
 @dataclass
 class Blockchain:
     unconfirmed_transactions: list = field(default_factory=list)
-    chain: list = field(default_factory=list)
+    chain: list[NimlothBlock] = field(default_factory=list)
     difficulty: int = 2
     nodes = set()
 
@@ -21,9 +23,12 @@ class Blockchain:
     # initialization of chain for blockchain
     # TODO: hash is not a property of block
     def create_genesis_block(self) -> None:
-        genesis_block = NimlothBlock(0, [], time.time(), "0")  # change argument order
+        genesis_block = NimlothBlock(
+            0, "null", "0", time.time(), 0, []
+        )  # change argument order
 
         genesis_block.hash = genesis_block.compute_hash()
+
         self.chain.append(genesis_block)
 
     def register_node(self, address):
@@ -62,6 +67,7 @@ class Blockchain:
 
     def proof_of_work(self, block: NimlothBlock) -> str:
         block.nonce = 0
+        block.verified_transactions_list = self.unconfirmed_transactions
         computed_hash = block.compute_hash()
         while not computed_hash.startswith("0" * Blockchain.difficulty):
             block.nonce += 1
@@ -72,18 +78,31 @@ class Blockchain:
     # TODO: hash is not a property of block
     # possibly have it return the block rather than a bool
     def add_block(self, block: NimlothBlock, proof) -> bool:
-        previous_hash = None  # self.last_block.hash
-        merkletree = Transactiontree(self.unconfirmed_transactions)
-        merkletree.hash_transactions(self.unconfirmed_transactions)
-        merkletree.build_merkle_tree()
-        block.transaction_node
-        if previous_hash != block.previous_hash:
+        previous_hash = block.previous_block_hash  # self.last_block.hash
+        if previous_hash != block.previous_block_hash:
             return False
-        if not self.is_valid_proof(block, proof):
+        if self.is_valid_proof(block, proof):
+            block.verified_transactions_list = []
             return False
         block.hash = proof
+        self.unconfirmed_transactions = []
         self.chain.append(block)
+        self.unconfirmed_transactions.clear()
         return True
+
+    # this is for development testing purposes only
+    def add_block_dev(self, new_hash):
+
+        genesis_block2 = NimlothBlock(
+            self.get_current_index(),
+            new_hash,
+            self.get_previous_hash(),
+            time.time(),
+            0,
+            [],
+        )
+        genesis_block2.hash = genesis_block2.compute_hash()
+        self.chain.append(genesis_block2)
 
     # TODO: type block_hash parameter
     def is_valid_proof(self, block: NimlothBlock, block_hash) -> bool:
@@ -95,6 +114,34 @@ class Blockchain:
     # TODO: type transaction parameter
     def add_new_transaction(self, transaction) -> None:
         self.unconfirmed_transactions.append(transaction)
+
+    # getter functions
+    def get_latest_block(self) -> NimlothBlock:
+        latestblock = self.chain[len(self.chain) - 1]
+        return latestblock
+
+    def get_previous_hash(self) -> str:
+        lastblock = self.get_latest_block()
+        return lastblock.hash
+
+    def get_current_index(self) -> int:
+        lastblock = self.get_latest_block()
+        lastindex = lastblock.index
+        return lastindex + 1
+
+    @property
+    def to_dict(self):
+        block_list = []
+        current_block = self.chain[len(self.chain) - 1]
+        for block in self.chain:
+            block_list.append(block.to_dict())
+        blockchaindict = {"dictionary": block_list}
+        return block_list
+
+    def _to_json(self):
+        # pylint: disable =no-member
+        return self.to_json()
+        # pylint: enable=no-member
 
     # add overall blockchain check(\)
     # add variable nonce value
