@@ -18,7 +18,7 @@ class NimlothBlock:
     verified_transactions_list: list = field(default_factory=list)
 
     def compute_hash(self) -> str:
-        block_string = json.dumps(self.__dict__, sort_keys=True)
+        block_string = json.dumps(self.to_dict(), sort_keys=True)
         return SHA.new(block_string.encode()).hexdigest()
 
     def clearblock(self):
