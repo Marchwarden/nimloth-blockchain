@@ -57,9 +57,8 @@ class Transaction:
             print("--------------")
 
     # TODO: this is an old transaction signing
-    def sign_transaction(self, privatekey, signature) -> str:
-        private_key = self.sender._private_key
-        signer = pkcs1_15.new(private_key)
+    def sign_transaction(self, privatekey) -> str:
+        private_key = self.sender.private_key
+        signer = pkcs1_15.new(privatekey)
         hash = SHA.new(str(self.to_dict()).encode("utf8"))  # change var name
-
         return binascii.hexlify(signer.sign(hash)).decode("ascii")

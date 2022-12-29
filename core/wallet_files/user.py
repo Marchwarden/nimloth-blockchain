@@ -1,6 +1,6 @@
 from dataclasses import dataclass, field
 import binascii
-from ..block_files.transaction import Transaction, Transaction_data
+from ..transaction_files.transaction import Transaction, Transaction_data
 from .wallet import Wallet, Coin
 from fastecdsa import curve, ecdsa, keys
 from Crypto.PublicKey import RSA
