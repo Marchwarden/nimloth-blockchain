@@ -1,12 +1,22 @@
-from flask import Flask
+# pylint: disable-all
+from flask import Flask, request, url_for, redirect, render_template
+from .block_files.blockchain import Blockchain
+from .block_files.block import NimlothBlock
+from .io_helpers import blockchain_io
+import json
+import os
+from dataclasses_json import dataclass_json
 
 
 def create_app(test_config=None):
+    ALLOWED_EXTENSIONS = {"txt", "pdf", "png", "jpg", "jpeg", "gif"}
     app = Flask(__name__, instance_relative_config=True)
     app.config.from_mapping(
         SECRET_KEY="dev",
     )
 
+    block_chain = Blockchain([], [], 2)
+    current_block = NimlothBlock("null", block_chain.printhash(), 0.0, 0, [])
     if test_config is None:
         # load the instance config, if it exists, when not testing
         app.config.from_pyfile("config.py", silent=True)
@@ -16,7 +26,37 @@ def create_app(test_config=None):
 
     # a simple page that says hello
     @app.route("/")
-    def hello():
-        return "Hello, World!"
+    def init():
+        return redirect(url_for("home"))
+
+    @app.route("/success/<name>", methods=["POST", "GET"])
+    def success(name):
+        document_path = os.getcwd() + "/core/json/blocktest.txt"
+
+        block_chain.add_block_dev(3)
+        filef = open(document_path, "wb")
+        filef.write(block_chain.to_json().encode("utf-8"))
+        return os.listdir("core/json")
+
+    @app.route("/home", methods=["POST", "GET"])
+    def home():
+        if request.method == "POST":
+            if request.form["submit_button"] == "add_current_block":
+                proof = current_block.hash = block_chain.proof_of_work(current_block)
+                block_chain.add_block(current_block, proof)
+                current_block.clearblock()
+            elif request.form["submit_button"] == "add_transaction":
+                action = "add transaction"
+        blockchain = request.args.get("blockchain")
+        return render_template(
+            "home.html", block_chain=block_chain, current_block=current_block
+        )
+
+    @app.route("/login", methods=["POST", "GET"])
+    def login():
+        if request.method == "POST":
+            block_chain.add_block_dev(3)
+        user = request.args.get("name")
+        return render_template("login.html", block_chain=block_chain)
 
     return app

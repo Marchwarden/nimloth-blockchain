@@ -1,24 +1,30 @@
-import json
 import time as _time
 from dataclasses import dataclass
 import binascii
 import collections
 
-from Crypto.PublicKey import RSA  # pylint: disable=import-error
-from Crypto.Random import get_random_bytes  # pylint: disable=import-error
-from Crypto.Signature import pkcs1_15  # pylint: disable=import-error
-from Crypto.Hash import SHA  # pylint: disable=import-error
+# pylint: disable-all
+from Crypto.PublicKey import RSA
+from Crypto.Random import get_random_bytes
+from Crypto.Signature import pkcs1_15
+from Crypto.Hash import SHA
+
+
+@dataclass
+class Transaction_data:
+    def __init__(self):
+        recipient: str
+        coin: str
+        value: str
 
 
 @dataclass
 class Transaction:
-
     sender: any  # TODO: Change
     recipient: str
     value: float
     coin_type: str  # Need to implement control and security protocols to check b4 compiled into blocks.
     time: float = _time.time()
-
     # add cointype, blockgroup, ether chain information, other arbitrary info
 
     # TODO: what is the identity property?
@@ -51,8 +57,8 @@ class Transaction:
             print("-----")
             print("--------------")
 
-    # TODO: this should not work
-    def sign_transaction(self) -> str:
+    # TODO: this is an old transaction signing
+    def sign_transaction(self, privatekey, signature) -> str:
         private_key = self.sender._private_key
         signer = pkcs1_15.new(private_key)
         hash = SHA.new(str(self.to_dict()).encode("utf8"))  # change var name
