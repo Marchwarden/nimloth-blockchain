@@ -1,6 +1,17 @@
 <html>
    <body>
       <form action = "http://localhost:8000/dev/add" method = "post">
+         <div>
+            <p><h1>Navigation</h1></p>
+               <strong><nav>
+                  <ul class = "menu">
+                     <li><a href = "{{url_for('home') }}">Home</a></li>
+                     <li><a href = "{{url_for('dev_add') }}">Add</a></li>
+                     <li><a href = "{{url_for('save') }}">Save</a></li>
+                  </ul>
+               </nav></strong>
+         </div>
+
          <p>New_hash:</p>
          <p><input type = "text" name = "hash" /></p>
          <p><input type = "submit" value = "submit" /></p>
