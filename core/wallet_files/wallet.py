@@ -10,18 +10,16 @@ from Crypto.Hash import SHA
 
 @dataclass
 class Coin:
-    def __init__(self):
-        self.name: str
-        self.amount = 0
+    name: str
+    amount: int = 0
 
     def change_value(self, amount):
         if (self.amount + amount) < 0:
             return ValueError
-        else:
-            self.amount += amount
+        self.amount += amount
+        return self.amount
 
 
-# pylint: disable-all
 class Wallet:
     # _private_key: RSA.RsaKey = RSA.generate(1024)
     # _public_key: RSA.RsaKey = _private_key.publickey()
@@ -42,12 +40,13 @@ class Wallet:
         for index, coin in enumerate(self.coins):
             if coin.name == coin_name:
                 return index
+        return -1
 
     @property
     def identity(self) -> str:
-        return binascii.hexlify(self._public_key.exportKey(format="DER")).decode(
-            "ascii"
-        )
+        return binascii.hexlify(
+            self.owner_public.public_key.exportKey(format="DER")
+        ).decode("ascii")
 
     # add authorization and authentification
     # I.E. proof of stake, proof of access to resourses, proof of authroization of transaction

@@ -5,7 +5,7 @@ from ..block_files.block import NimlothBlock
 
 FILENAME = "blockchainjson"
 
-# pylint: disable-all
+
 def get_blockchain_from_memory():
     with open(FILENAME, "r") as file_obj:
         blocks_text = file_obj.read()

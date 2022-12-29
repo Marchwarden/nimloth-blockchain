@@ -3,7 +3,7 @@ import json
 from urllib import request
 import urllib.parse
 
-# pylint: disable-all
+
 from dataclasses import dataclass, field
 from dataclasses_json import dataclass_json
 from .block import NimlothBlock
@@ -93,10 +93,16 @@ class Blockchain:
     # this is for development testing purposes only
     def add_block_dev(self, new_hash):
 
-        genesis_block2 = NimlothBlock(int(new_hash), "est", "0", time.time(), 0, [])
+        genesis_block2 = NimlothBlock(
+            self.get_current_index(),
+            new_hash,
+            self.get_previous_hash(),
+            time.time(),
+            0,
+            [],
+        )
         genesis_block2.hash = genesis_block2.compute_hash()
         self.chain.append(genesis_block2)
-        return
 
     # TODO: type block_hash parameter
     def is_valid_proof(self, block: NimlothBlock, block_hash) -> bool:
@@ -109,26 +115,33 @@ class Blockchain:
     def add_new_transaction(self, transaction) -> None:
         self.unconfirmed_transactions.append(transaction)
 
-    def printhash(self) -> str:
+    # getter functions
+    def get_latest_block(self) -> NimlothBlock:
         latestblock = self.chain[len(self.chain) - 1]
-        return latestblock.hash
+        return latestblock
+
+    def get_previous_hash(self) -> str:
+        lastblock = self.get_latest_block()
+        return lastblock.hash
+
+    def get_current_index(self) -> int:
+        lastblock = self.get_latest_block()
+        lastindex = lastblock.index
+        return lastindex + 1
 
     @property
     def to_dict(self):
-
         block_list = []
         current_block = self.chain[len(self.chain) - 1]
-        x = len(self.chain)
         for block in self.chain:
             block_list.append(block.to_dict())
-
         blockchaindict = {"dictionary": block_list}
-
         return block_list
 
-    @property
-    def to_json(self):
-        return self.to_dict
+    def _to_json(self):
+        # pylint: disable =no-member
+        return self.to_json()
+        # pylint: enable=no-member
 
     # add overall blockchain check(\)
     # add variable nonce value

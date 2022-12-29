@@ -3,7 +3,6 @@ from dataclasses import dataclass
 import binascii
 import collections
 
-# pylint: disable-all
 from Crypto.PublicKey import RSA
 from Crypto.Random import get_random_bytes
 from Crypto.Signature import pkcs1_15
@@ -11,7 +10,7 @@ from Crypto.Hash import SHA
 
 
 @dataclass
-class Transaction_data:
+class TransactionData:
     def __init__(self):
         recipient: str
         coin: str
