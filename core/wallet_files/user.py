@@ -28,6 +28,9 @@ class User:
             "ascii"
         )
 
+    def set_keys(self, private):
+        self.private_key = RSA.importKey(private)
+        self.public_key= self.generate_public_key(self.private_key)
     def generate_private_key(self):
         privatekey = RSA.generate(2048)
         return privatekey

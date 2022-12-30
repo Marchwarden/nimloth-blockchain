@@ -48,7 +48,12 @@ def create_app(test_config=None):
                 coin = request.args.get("coin")
                 transaction =curr_user.generate_transaction(recipient, coin, amount)
                 block_chain.add_new_transaction(transaction)
+                return curr_user.private_key.exportKey('PEM')
+            if request.form["submit_button"] == "set_user":
+                privatekey = request.args.get("privatekey")
+                curr_user.set_keys(privatekey)
         # filef = open(document_path, "wb")
+        
         # filef.write(block_chain._to_json().encode("utf-8"))
         return render_template(
             "user.html", block_chain=block_chain, current_block=current_block, curr_user=curr_user
