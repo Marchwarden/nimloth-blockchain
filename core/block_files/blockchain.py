@@ -93,15 +93,16 @@ class Blockchain:
 
     # this is for development testing purposes only
     def add_block_dev(self, new_hash):
-
+        
         genesis_block2 = NimlothBlock(
             self.get_current_index(),
             new_hash,
             self.get_previous_hash(),
             time.time(),
             0,
-            [],
+            self.unconfirmed_transactions,
         )
+        self.unconfirmed_transactions=[]
         genesis_block2.hash = genesis_block2.compute_hash()
         self.chain.append(genesis_block2)
 
