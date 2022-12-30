@@ -1,7 +1,6 @@
 from dataclasses import dataclass, field
 import binascii
 import base58
-from .user import User
 from Crypto.PublicKey import RSA
 from Crypto.Random import get_random_bytes
 from Crypto.Signature import pkcs1_15
@@ -29,10 +28,10 @@ class Wallet:
     # _signer: pkcs1_15.PKCS115_SigScheme = pkcs1_15.new(_private_key)
     # multi layer encryption
     # dependant on account information different encryption systems are used, and then account recovery questions are used as keywords for further private generation
-    def __init__(self, public_key:bytes):
+    def __init__(self, public_key):
         self.owner_public = public_key
         self.coins = []
-        self.address = self.wallet_address()
+        self.address = self.wallet_address
 
     def new_coin(self, name, amount):
         _coin = Coin(name)
@@ -54,14 +53,18 @@ class Wallet:
         
     @property
     def wallet_address(self):
+        public_key = self.owner_public
+        if type(public_key) == str:
+            public_key = bytearray(public_key, "utf-8")
         hash_1 = SHA256.new()
-        hash_1.update(self.owner_public)
-        hash_1 = hash_1.hexdigest()
+        hash_1.update(public_key)
+        hash_1=hash_1.hexdigest()
+        if type(hash_1) == str:
+            hash_1 = bytearray(hash_1, "utf-8")
         hash_2 = RIPEMD160.new()
         hash_2.update(hash_1)
         hash_2 =hash_2.hexdigest()
         return base58.b58encode(hash_2)
- 
 
     # add authorization and authentification
     # I.E. proof of stake, proof of access to resourses, proof of authroization of transaction

@@ -4,6 +4,9 @@ from flask import Flask, request, url_for, redirect, render_template
 from .block_files.blockchain import Blockchain
 from .block_files.block import NimlothBlock
 from .io_helpers import blockchain_io
+from .wallet_files.user import User
+
+
 
 
 def create_app(test_config=None):
@@ -34,6 +37,22 @@ def create_app(test_config=None):
         # filef = open(document_path, "wb")
         # filef.write(block_chain._to_json().encode("utf-8"))
         return "blockchain saved"
+    
+    @app.route("/user", methods=["POST", "GET"])
+    def user():
+        curr_user = User()
+        if request.method == "POST":
+            if request.form["submit_button"] == "add_transaction":
+                recipient = request.args.get("recipient")
+                amount = request.args.get("amount")
+                coin = request.args.get("coin")
+                transaction =curr_user.generate_transaction(recipient, coin, amount)
+                block_chain.add_new_transaction(transaction)
+        # filef = open(document_path, "wb")
+        # filef.write(block_chain._to_json().encode("utf-8"))
+        return render_template(
+            "user.html", block_chain=block_chain, current_block=current_block, curr_user=curr_user
+        )
     
     @app.route("/load", methods=["POST", "GET"])
     def load():

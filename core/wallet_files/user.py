@@ -1,8 +1,7 @@
 from dataclasses import dataclass, field
 import binascii
-from ..transaction_files.transaction import Transaction, Transaction_data
+from ..transaction_files.transaction import Transaction
 from .wallet import Wallet, Coin
-from fastecdsa import curve, ecdsa, keys
 from Crypto.PublicKey import RSA
 from Crypto.Random import get_random_bytes
 from Crypto.Signature import pkcs1_15
@@ -37,21 +36,27 @@ class User:
         publickey = self.private_key.publickey().export_key()
         return publickey
 
-    def create_transaction(self, transaction_data: Transaction_data):
-        if self.check_transaction(transaction_data) != True:
-            return ValueError
-        new_transaction = Transaction(
-            self.public_key,
-            transaction_data.recipient,
-            transaction_data.value,
-            transaction_data.coin,
-        )
+    # this is currently inefficient and pointless, but will be important for taking data as bytes, or json blocks rather than just individual fields
+    def generate_transaction(self, recipient, coin, value):
+        transaction = Transaction(self.wallet, recipient, value, coin)
+        return self.create_transaction(transaction)
+
+    def create_transaction(self, transaction_data: Transaction):
+        # if self.check_transaction(transaction_data) != True:
+        #     return ValueError
+        # new_transaction = Transaction(
+        #     self.public_key,
+        #     transaction_data.recipient,
+        #     transaction_data.value,
+        #     transaction_data.coin,
+        # )
+        new_transaction = self.sign_transaction(transaction_data)
         return new_transaction
 
     def check_transaction(self, transaction_data):
         if self.public_key != self.wallet.owner_public:
             return NameError
-        if self.wallet.search_for_coin(transaction_data.coin) == -1:
+        if self.wallet.search_for_coin(transaction_data.coin_type) == -1:
             return ValueError
         else:
             if (
@@ -63,6 +68,9 @@ class User:
                 return ValueError
         return True
     
+    def sign_transaction(self, transaction):
+        transaction.sign_transaction(self.private_key)
+        return transaction
     #obsolete signing method
     # def sign_transaction(self, transaction, private_key):
     #     sha256 = ecdsa.sha256

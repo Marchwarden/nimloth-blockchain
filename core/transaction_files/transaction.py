@@ -1,28 +1,30 @@
 import time as _time
 from dataclasses import dataclass
+from dataclasses_json import dataclass_json
 import binascii
 import collections
 import json
-from ..wallet_files.user import User
 from ..wallet_files.wallet import Wallet
 from Crypto.PublicKey import RSA
 from Crypto.Random import get_random_bytes
 from Crypto.Signature import pkcs1_15
 from Crypto.Hash import SHA, SHA256
 
-
+# unneccessary class - should be removed
 @dataclass
 class TransactionData:
     def __init__(self):
         recipient: str
         coin: str
         value: str
-@dataclass
-class TransactionInput:
-    output_index: int
-    transaction_hash:str
-    public_key: bytes
-    signature: bytes
+        
+# neccessary class should be expanded upon
+# @dataclass
+# class TransactionInput:
+#     output_index: int
+#     transaction_hash:str
+#     public_key: bytes
+#     signature: bytes
     
 
 @dataclass
@@ -36,7 +38,7 @@ class Transaction:
     # add cointype, blockgroup, ether chain information, other arbitrary info
 
     # TODO: what is the identity property?
-    def to_dict(self) -> collections.OrderedDict:
+    def _to_dict(self) -> collections.OrderedDict:
         if self.sender == "Genesis":
             identity = "Genesis"
         else:
@@ -51,14 +53,16 @@ class Transaction:
                 "coinType": self.coin_type,
             }
         )
-    
+    def to__dict(self):
+        return self._to_dict()
+        
     def to_bytes(self):
-        transaction_byte_data = self.to_dict
+        transaction_byte_data = self.to__dict()
         return json.dumps(transaction_byte_data, indent=2).encode('utf-8')
         
     def display_transaction(self, transactions):
         for transaction in transactions:
-            dict = transaction.to_dict()
+            dict = transaction._to_dict()
             print("sender: " + dict["sender"])
             print("-----")
             print("recipient: " + dict["recipient"])
@@ -72,7 +76,7 @@ class Transaction:
     # # TODO: this is an old transaction signing
     #TODO fix sign transaction to represent addreses rather than public keys
     def sign_transaction(self, privatekey) -> str:
-        transaction_data = self.to_bytes
+        transaction_data = self.to_bytes()
         signer = pkcs1_15.new(privatekey)
         hash = SHA256.new(transaction_data)  # change var name
         signature = signer.sign(hash)

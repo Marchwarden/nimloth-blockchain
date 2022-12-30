@@ -6,6 +6,7 @@ import urllib.parse
 
 from dataclasses import dataclass, field
 from dataclasses_json import dataclass_json
+
 from .block import NimlothBlock
 
 
@@ -113,7 +114,8 @@ class Blockchain:
 
     # TODO: type transaction parameter
     def add_new_transaction(self, transaction) -> None:
-        self.unconfirmed_transactions.append(transaction)
+        transaction_dict = transaction.to__dict()
+        self.unconfirmed_transactions.append(transaction_dict)
 
     # getter functions
     def get_latest_block(self) -> NimlothBlock:
@@ -132,6 +134,9 @@ class Blockchain:
     @property
     def to_dict(self):
         block_list = []
+        transaction_list =[]
+        for transaction in self.unconfirmed_transactions:
+            transaction_list.append(transaction.to_dict())
         current_block = self.chain[len(self.chain) - 1]
         for block in self.chain:
             block_list.append(block.to_dict())
