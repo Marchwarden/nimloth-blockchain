@@ -30,11 +30,11 @@ class User:
         )
 
     def generate_private_key(self):
-        privatekey = keys.gen_private_key(curve.secp256k1)
+        privatekey = RSA.generate(2048)
         return privatekey
 
     def generate_public_key(self, private_key):
-        publickey = keys.get_public_key(private_key, curve.secp256k1)
+        publickey = self.private_key.publickey().export_key()
         return publickey
 
     def create_transaction(self, transaction_data: Transaction_data):
@@ -62,12 +62,13 @@ class User:
             ):
                 return ValueError
         return True
-
-    def sign_transaction(self, transaction, private_key):
-        sha256 = ecdsa.sha256
-        secp256k1 = curve.secp256k1
-        signature = ecdsa.sign(transaction, private_key, secp256k1, sha256)
-        return signature
+    
+    #obsolete signing method
+    # def sign_transaction(self, transaction, private_key):
+    #     sha256 = ecdsa.sha256
+    #     secp256k1 = curve.secp256k1
+    #     signature = ecdsa.sign(transaction, private_key, secp256k1, sha256)
+    #     return signature
 
     # add authorization and authentification
     # I.E. proof of stake, proof of access to resourses, proof of authroization of transaction
