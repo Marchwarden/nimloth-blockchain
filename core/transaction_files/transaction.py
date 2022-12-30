@@ -19,12 +19,35 @@ class TransactionData:
         value: str
         
 # neccessary class should be expanded upon
-# @dataclass
-# class TransactionInput:
-#     output_index: int
-#     transaction_hash:str
-#     public_key: bytes
-#     signature: bytes
+@dataclass
+class TransactionInput:
+    transaction_data:str
+    output_index: int
+    transaction_hash:str
+    public_key: bytes
+    signature: bytes
+    
+    def _to_json(self)-> str:
+        if self.signature == None:
+            return json.dumps({
+                "transaction_data": self.transaction_data,
+                "output_index": self.output_index,
+                "transaction_hash": self.transaction_hash
+            })
+        return json.dumps({
+            "transaction_data": self.transaction_data,
+            "output_index": self.output_index,
+            "transaction_hash": self.transaction_hash,
+            "public_key": self.public_key,
+            "signature": self.signature
+        })
+@dataclass 
+class TransactionOutput:
+    amount: int
+    public_key_hash: str
+    
+    def _to_json(self)-> str:
+        return self.to_json()
     
 
 @dataclass
