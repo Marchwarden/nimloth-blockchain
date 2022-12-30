@@ -34,6 +34,23 @@ def create_app(test_config=None):
         # filef = open(document_path, "wb")
         # filef.write(block_chain._to_json().encode("utf-8"))
         return "blockchain saved"
+    
+    @app.route("/load", methods=["POST", "GET"])
+    def load():
+        document_path = os.getcwd() + "/core/json/blocktest2.txt"
+        with open(document_path, "r") as file_handle:
+            blocks_text = file_handle.read()
+            block_dict = json.loads(blocks_text)
+            blockchain = Blockchain(block_dict["unconfirmed_transactions"], [], block_dict["difficulty"])
+            block_list = block_dict["chain"]
+            for block_dict in block_list:
+                block = NimlothBlock(block_dict["index"], block_dict["hash"], block_dict["previous_block_hash"], block_dict["timestamp"], block_dict["nonce"], block_dict["verified_transactions_list"])
+                blockchain.chain.append(block)
+            block_chain.load(blockchain)
+            return "blockchain loaded"
+        # filef = open(document_path, "wb")
+        # filef.write(block_chain._to_json().encode("utf-8"))
+        return "blockchain saved"
 
     @app.route("/dev/add", methods=["POST", "GET"])
     def dev_add():

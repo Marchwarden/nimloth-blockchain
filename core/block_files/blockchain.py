@@ -142,6 +142,11 @@ class Blockchain:
         # pylint: disable =no-member
         return self.to_json()
         # pylint: enable=no-member
+        
+    def load(self, blockchain):
+        self.unconfirmed_transactions = blockchain.unconfirmed_transactions
+        self.difficulty = blockchain.difficulty
+        self.chain = blockchain.chain 
 
     # add overall blockchain check(\)
     # add variable nonce value
