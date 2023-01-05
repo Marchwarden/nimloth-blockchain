@@ -9,7 +9,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
-      - name: Set up Python ${{ matrix.python-version }}
+      - name: Set up Python 3.9
         uses: actions/setup-python@v4
         with:
           python-version: "3.9"
@@ -19,7 +19,7 @@ jobs:
           python -m pip install --upgrade pipenv
           pipenv install 
           pipenv install --dev
-          pipenv install -e 
+          pipenv install -e .
           
       - name: Test with pytest
         run: |
