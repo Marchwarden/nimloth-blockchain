@@ -1,6 +1,6 @@
 import pytest
 from flask import Flask
-from flask.testing import FlaskClient
+from flask.testing import FlaskClient, FlaskCliRunner
 from core import create_app  # pylint: disable=import-error
 
 
@@ -18,3 +18,8 @@ def app():
 @pytest.fixture
 def client(app: Flask) -> FlaskClient:
     return app.test_client()
+
+
+@pytest.fixture
+def runner(app: Flask) -> FlaskCliRunner:
+    return app.test_cli_runner()

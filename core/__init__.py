@@ -1,6 +1,6 @@
 import json
 import os
-from flask import Flask, request, url_for, redirect, render_template
+from flask import abort, Flask, request, url_for, redirect, render_template
 from .block_files.blockchain import Blockchain
 from .block_files.block import NimlothBlock
 from .io_helpers import blockchain_io
@@ -49,8 +49,10 @@ def create_app(test_config=None) -> Flask:
                 proof = current_block.hash = block_chain.proof_of_work(current_block)
                 block_chain.add_block(current_block, proof)
                 current_block.clearblock()
-            elif request.form["submit_button"] == "add_transaction":
+            elif request.form["submit_button"] == "add_current_transaction":
                 action = "add transaction"
+            else:
+                abort(400)
         blockchain = request.args.get("blockchain")
         return render_template(
             "home.html", block_chain=block_chain, current_block=current_block
