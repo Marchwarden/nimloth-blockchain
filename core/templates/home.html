@@ -1,32 +1,45 @@
 
 <html>
    <body>
-      <form action = "http://localhost:8000/home" method = "post">
-         <div>
-            <p><h1>Navigation</h1></p>
-               <strong><nav>
-                  <ul class = "menu">
-                     <li><a href = "{{url_for('home') }}">Home</a></li>
-                     <li><a href = "{{url_for('dev_add') }}">Add</a></li>
-                     <li><a href = "{{url_for('save') }}">Save</a></li>
-                  </ul>
-               </nav></strong>
-         </div>
-         <p><h2>Blockchain is currently running</h2></p>
-         <p><h1>TESTdING</h1><p>
-         <p>Username:</p>
-         <p><input type = "text" name = "name" /></p>
-         <p><input type = "submit" name = "submit_button" value = "add_current_block" /></p>
-         
-         <p><input type = "text" name = "sender" value = "sender" /></p>
-         <p><input type = "text" name = "reciever" value = "reciever" /></p>
-         <p><input type = "text" name = "amount" value = "amount" /></p>
-         <p><input type = "text" name = "coin" value = "coin" /></p>
-         <p><input type = "submit" name = "submit_button" value = "add_transaction" /></p>
-      </form>
-      <table border =1 >
-        
+      <div>
+         <p><h1>Navigation</h1></p>
+            <strong><nav>
+               <ul class = "menu">
+                  <li><a href = "{{url_for('home') }}">Home</a></li>
+                  <li><a href = "{{url_for('dev_add') }}">Add</a></li>
+                  <li><a href = "{{url_for('save') }}">Save</a></li>
+               </ul>
+            </nav></strong>
+      </div>
+      <h2>Blockchain is currently running</h2>
+      <h1>TESTING</h1>
 
+      <form method = "post">
+         <div>
+            <label for="username">Username</label>
+            <input name="username" id="username" />
+         </div>
+         <input type = "submit" name="submit_button" value="add_current_block" />
+         <div>
+            <label for="sender">Sender</label>
+            <input name="sender" id="sender" />
+         </div>
+         <div>
+            <label for="receiver">Receiver</label>
+            <input name="receiver" id="receiver" />
+         </div>
+         <div>
+            <label for="amount">Amount</label>
+            <input name="amount" id="amount" />
+         </div>
+         <div>
+            <label for="coin">Coin</label>
+            <input name="coin" id="coin" />
+         </div>
+         <input type="submit" name="submit_button" value="add_transaction" />
+      </form>
+
+      <table border=1>
          <tr>
             <th> {{ "this is the current block"}} </th>
             <td> {{ current_block.hash}} </td>
@@ -35,9 +48,17 @@
             <th> {{ "this is the previous block hash"}} </th>
             <td> {{ block_chain.get_previous_hash()}} </td>
          </tr>
-         
-    
       </table>
    </body>
-   
 </html>
+
+<style>
+   div {
+      margin-bottom: 10px; 
+      margin-top: 10px; 
+   }
+   label {
+      display: inline-block; 
+      width: 80px; 
+   }
+</style>
