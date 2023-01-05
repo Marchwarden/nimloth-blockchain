@@ -1,9 +1,22 @@
 <html>
    <body>
-      <form action = "http://localhost:8000/login" method = "post">
-         <p>Username:</p>
-         <p><input type = "text" name = "name" /></p>
-         <p><input type = "submit" value = "submit" /></p>
+      <form method = "post">
+         <div>
+            <label for="username">Username</label>
+            <input name="username" id="username" />
+         </div>
+         <input type = "submit" value = "submit" />
       </form>
    </body>
 </html>
+
+<style>
+   div {
+      margin-bottom: 10px; 
+      margin-top: 10px; 
+   }
+   label {
+      display: inline-block; 
+      width: 80px; 
+   }
+</style>
