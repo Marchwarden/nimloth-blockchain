@@ -25,7 +25,7 @@ class TransactionInput:
     output_index: int
     transaction_hash:str
     public_key: bytes
-    signature: bytes
+    signature: bytes = None
     
     def _to_json(self)-> str:
         if self.signature == None:
@@ -44,12 +44,54 @@ class TransactionInput:
 @dataclass 
 class TransactionOutput:
     amount: int
+    coin_type: str
     public_key_hash: str
     
     def _to_json(self)-> str:
         return self.to_json()
     
+@dataclass
+class TransactionNew:
+    sender: Wallet# this is now the wallet address(could possibly change to wallet object)
+    inputs: list[TransactionInput]
+    outputs: list [TransactionOutput]
+    time: float = _time.time()
 
+    # TODO: what is the identity property?
+    def _to_dict(self) -> collections.OrderedDict:
+        return collections.OrderedDict(
+            {
+                "sender": str(self.sender.address),
+                "inputs": [transaction_input._to_json() for transaction_input in self.inputs],
+                "outputs": [transaction_output._to_json() for transaction_output in self.outputs],
+                "time": str(self.time),
+            }
+        )
+    def to__dict(self):
+        return self._to_dict()
+        
+    def to_bytes(self):
+        transaction_byte_data = self.to__dict()
+        return json.dumps(transaction_byte_data, indent=2).encode('utf-8')
+
+    # # TODO: this is an old transaction signing
+    #TODO fix sign transaction to represent addreses rather than public keys
+    def sign_transaction(self, privatekey) -> str:
+        transaction_data = self.to_bytes()
+        signer = pkcs1_15.new(privatekey)
+        hash = SHA256.new(transaction_data)  # change var name
+        signature = signer.sign(hash)
+        input_signature = binascii.hexlify(signature).decode("utf-8")
+        for transaction_input in self.inputs:
+            transaction_input.signature = input_signature
+            transaction_input.public_key = self.sender.owner_public
+
+
+# 
+# 
+# 
+# 
+# 
 @dataclass
 class Transaction:
     sender: Wallet   # this is now the wallet address(could possibly change to wallet object)
