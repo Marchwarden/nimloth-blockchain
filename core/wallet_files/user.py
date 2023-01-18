@@ -30,7 +30,8 @@ class User:
 
     def set_keys(self, private):
         self.private_key = RSA.importKey(private)
-        self.public_key= self.generate_public_key(self.private_key)
+        self.public_key = self.generate_public_key(self.private_key)
+
     def generate_private_key(self):
         privatekey = RSA.generate(2048)
         return privatekey
@@ -70,11 +71,12 @@ class User:
             ):
                 return ValueError
         return True
-    
-    def sign_transaction(self, transaction):
+
+    def sign_transaction(self, transaction: Transaction):
         transaction.sign_transaction(self.private_key)
         return transaction
-    #obsolete signing method
+
+    # obsolete signing method
     # def sign_transaction(self, transaction, private_key):
     #     sha256 = ecdsa.sha256
     #     secp256k1 = curve.secp256k1

@@ -66,6 +66,7 @@ class Blockchain:
 
         return False
 
+    # old proof_of_work, currently not working
     def proof_of_work(self, block: NimlothBlock) -> str:
         block.nonce = 0
         block.verified_transactions_list = self.unconfirmed_transactions
@@ -74,6 +75,53 @@ class Blockchain:
             block.nonce += 1
             computed_hash = block.compute_hash()
         return computed_hash
+
+    # TODO:add new block creation and new proof of work
+    def proof_of_work_dev(self):
+        return None
+
+    def get_noonce(self, new_block: NimlothBlock) -> int:
+        new_block_hash = new_block.hash
+        noonce = new_block.nonce
+        starting_zeros = "".join([str(0) for _ in range(self.difficulty)])
+        while not new_block_hash.startswith("0" * Blockchain.difficulty):
+            noonce += 1
+            new_block.nonce = noonce
+            new_block_hash = new_block.compute_hash()
+        return noonce
+
+    def create_block(self):
+        new_block = NimlothBlock(
+            self.get_current_index(),
+            "",
+            self.get_previous_hash(),
+            time.time(),
+            0,
+            self.unconfirmed_transactions,
+        )
+        new_block.nonce = self.get_noonce(new_block)
+        new_block.hash = new_block.compute_hash()
+        if self.validate_block(new_block):
+            self.unconfirmed_transactions = []
+            self.chain.append(new_block)
+            return new_block
+        return False
+
+    def validate_block(self, new_block: NimlothBlock):
+        new_hash = new_block.hash
+        number_of_zeros_string = "".join([str(0) for _ in range(self.difficulty)])
+        try:
+            assert new_hash.startswith(number_of_zeros_string)
+            return True
+        except AssertionError:
+            print("Proof of work validation failed")
+            return False
+
+    def validate_transaction(self, new_block: NimlothBlock):
+        for transaction in new_block.verified_transactions_list:
+            continue
+            # todo: write aws server fund checking:
+        return True
 
     # TODO: type proof parameter
     # TODO: hash is not a property of block
@@ -93,7 +141,7 @@ class Blockchain:
 
     # this is for development testing purposes only
     def add_block_dev(self, new_hash):
-        
+
         genesis_block2 = NimlothBlock(
             self.get_current_index(),
             new_hash,
@@ -102,7 +150,7 @@ class Blockchain:
             0,
             self.unconfirmed_transactions,
         )
-        self.unconfirmed_transactions=[]
+        self.unconfirmed_transactions = []
         genesis_block2.hash = genesis_block2.compute_hash()
         self.chain.append(genesis_block2)
 
@@ -135,7 +183,7 @@ class Blockchain:
     @property
     def to_dict(self):
         block_list = []
-        transaction_list =[]
+        transaction_list = []
         for transaction in self.unconfirmed_transactions:
             transaction_list.append(transaction.to_dict())
         current_block = self.chain[len(self.chain) - 1]
@@ -148,11 +196,11 @@ class Blockchain:
         # pylint: disable =no-member
         return self.to_json()
         # pylint: enable=no-member
-        
+
     def load(self, blockchain):
         self.unconfirmed_transactions = blockchain.unconfirmed_transactions
         self.difficulty = blockchain.difficulty
-        self.chain = blockchain.chain 
+        self.chain = blockchain.chain
 
     # add overall blockchain check(\)
     # add variable nonce value

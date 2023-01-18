@@ -7,8 +7,6 @@ from .io_helpers import blockchain_io
 from .wallet_files.user import User
 
 
-
-
 def create_app(test_config=None):
     app = Flask(__name__, instance_relative_config=True)
     app.config.from_mapping(
@@ -37,7 +35,7 @@ def create_app(test_config=None):
         # filef = open(document_path, "wb")
         # filef.write(block_chain._to_json().encode("utf-8"))
         return "blockchain saved"
-    
+
     @app.route("/user", methods=["POST", "GET"])
     def user():
         curr_user = User()
@@ -46,29 +44,41 @@ def create_app(test_config=None):
                 recipient = request.args.get("recipient")
                 amount = request.args.get("amount")
                 coin = request.args.get("coin")
-                transaction =curr_user.generate_transaction(recipient, coin, amount)
+                transaction = curr_user.generate_transaction(recipient, coin, amount)
                 block_chain.add_new_transaction(transaction)
-                return curr_user.private_key.exportKey('PEM')
+                return curr_user.private_key.exportKey("PEM")
             if request.form["submit_button"] == "set_user":
                 privatekey = request.args.get("privatekey")
                 curr_user.set_keys(privatekey)
         # filef = open(document_path, "wb")
-        
+
         # filef.write(block_chain._to_json().encode("utf-8"))
         return render_template(
-            "user.html", block_chain=block_chain, current_block=current_block, curr_user=curr_user
+            "user.html",
+            block_chain=block_chain,
+            current_block=current_block,
+            curr_user=curr_user,
         )
-    
+
     @app.route("/load", methods=["POST", "GET"])
     def load():
         document_path = os.getcwd() + "/core/json/blocktest2.txt"
         with open(document_path, "r") as file_handle:
             blocks_text = file_handle.read()
             block_dict = json.loads(blocks_text)
-            blockchain = Blockchain(block_dict["unconfirmed_transactions"], [], block_dict["difficulty"])
+            blockchain = Blockchain(
+                block_dict["unconfirmed_transactions"], [], block_dict["difficulty"]
+            )
             block_list = block_dict["chain"]
             for block_dict in block_list:
-                block = NimlothBlock(block_dict["index"], block_dict["hash"], block_dict["previous_block_hash"], block_dict["timestamp"], block_dict["nonce"], block_dict["verified_transactions_list"])
+                block = NimlothBlock(
+                    block_dict["index"],
+                    block_dict["hash"],
+                    block_dict["previous_block_hash"],
+                    block_dict["timestamp"],
+                    block_dict["nonce"],
+                    block_dict["verified_transactions_list"],
+                )
                 blockchain.chain.append(block)
             block_chain.load(blockchain)
             return "blockchain loaded"
@@ -80,7 +90,7 @@ def create_app(test_config=None):
     def dev_add():
         if request.method == "POST":
             new_hash = request.args.get("hash")
-            block_chain.add_block_dev(new_hash)
+            block_chain.create_block()
         return render_template("add.html", block_chain=block_chain)
 
     @app.route("/home", methods=["POST", "GET"])
