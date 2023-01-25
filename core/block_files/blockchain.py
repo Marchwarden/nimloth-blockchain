@@ -80,15 +80,15 @@ class Blockchain:
     def proof_of_work_dev(self):
         return None
 
-    def get_noonce(self, new_block: NimlothBlock) -> int:
+    def get_nonce(self, new_block: NimlothBlock) -> int:
         new_block_hash = new_block.hash
-        noonce = new_block.nonce
+        nonce = new_block.nonce
         starting_zeros = "".join([str(0) for _ in range(self.difficulty)])
         while not new_block_hash.startswith("0" * Blockchain.difficulty):
-            noonce += 1
-            new_block.nonce = noonce
+            nonce += 1
+            new_block.nonce = nonce
             new_block_hash = new_block.compute_hash()
-        return noonce
+        return nonce
 
     def create_block(self):
         new_block = NimlothBlock(
@@ -99,7 +99,7 @@ class Blockchain:
             0,
             self.unconfirmed_transactions,
         )
-        new_block.nonce = self.get_noonce(new_block)
+        new_block.nonce = self.get_nonce(new_block)
         new_block.hash = new_block.compute_hash()
         if self.validate_block(new_block):
             self.unconfirmed_transactions = []

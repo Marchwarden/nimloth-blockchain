@@ -2,6 +2,7 @@ from dataclasses import dataclass, field
 import binascii
 from ..transaction_files.transaction import Transaction
 from .wallet import Wallet, Coin
+from ..node_files.node import Node
 from Crypto.PublicKey import RSA
 from Crypto.Random import get_random_bytes
 from Crypto.Signature import pkcs1_15
@@ -9,6 +10,20 @@ from Crypto.Hash import SHA
 
 # pylint: disable-all
 # TODO: are these attributes meant to be immutable?
+import requests
+
+
+class UserNode:
+    def __init__(self):
+        self.ip = "127.0.0.1"
+        self.port = 5000
+        self.base_url = f"http://{self.ip}:{self.port}/"
+
+    def send(self, transaction: dict) -> requests.Response:
+        url = f"{self.base_url}transactions"
+        req_return = requests.post(url, json=transaction)
+        req_return.raise_for_status()
+        return req_return
 
 
 class User:
@@ -21,6 +36,7 @@ class User:
         self.private_key = self.generate_private_key()
         self.public_key = self.generate_public_key(self.private_key)
         self.wallet = Wallet(self.public_key)
+        self.node = Node()
 
     @property
     def identity(self) -> str:
@@ -55,6 +71,7 @@ class User:
         #     transaction_data.coin,
         # )
         new_transaction = self.sign_transaction(transaction_data)
+        self.node.send({"transaction": new_transaction.to__dict()})
         return new_transaction
 
     def check_transaction(self, transaction_data):

@@ -11,6 +11,7 @@ pymongo = "*"
 flask-sqlalchemy = "*"
 dataclasses-json = "*"
 base58 = "*"
+requests = "*"
 
 [dev-packages]
 black = "*"

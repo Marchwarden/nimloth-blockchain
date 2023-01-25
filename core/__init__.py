@@ -32,8 +32,6 @@ def create_app(test_config=None):
         document_path = os.getcwd() + "/core/json/blocktest.txt"
         with open(document_path, "wb") as file_handle:
             file_handle.write(block_chain._to_json().encode("utf-8"))
-        # filef = open(document_path, "wb")
-        # filef.write(block_chain._to_json().encode("utf-8"))
         return "blockchain saved"
 
     @app.route("/user", methods=["POST", "GET"])
@@ -55,6 +53,16 @@ def create_app(test_config=None):
         # filef.write(block_chain._to_json().encode("utf-8"))
         return render_template(
             "user.html",
+            block_chain=block_chain,
+            current_block=current_block,
+            curr_user=curr_user,
+        )
+
+        # filef = open(document_path, "wb")
+
+        # filef.write(block_chain._to_json().encode("utf-8"))
+        return render_template(
+            "transaction.html",
             block_chain=block_chain,
             current_block=current_block,
             curr_user=curr_user,
