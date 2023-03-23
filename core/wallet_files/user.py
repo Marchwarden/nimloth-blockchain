@@ -14,6 +14,8 @@ import requests
 
 
 class UserNode:
+    """Usernode: this is the class which sets up the node object that the user interacts with and allows the sending of transactions between nodes
+    """
     def __init__(self):
         self.ip = "127.0.0.1"
         self.port = 5000
@@ -32,6 +34,13 @@ class User:
     # _signer: pkcs1_15.PKCS115_SigScheme = pkcs1_15.new(_private_key)
     # multi layer encryption
     # dependant on account information different encryption systems are used, and then account recovery questions are used as keywords for further private generation
+    """User: this is the user data class, it contains a users wallet object
+        Attributes:
+        private_key-bytes: this is the users private key
+        public_key-bytes: this is the users public key
+        wallet-Wallet: this is the user wallet object, based on the users public key
+        node: a node object from node.py
+    """
     def __init__(self):
         self.private_key = self.generate_private_key()
         self.public_key = self.generate_public_key(self.private_key)
@@ -44,14 +53,17 @@ class User:
             "ascii"
         )
 
+    #given a privatekey value as a str, sets the private and public key for user
     def set_keys(self, private):
         self.private_key = RSA.importKey(private)
         self.public_key = self.generate_public_key(self.private_key)
 
+    #generates a RSA private key
     def generate_private_key(self):
         privatekey = RSA.generate(2048)
         return privatekey
 
+    #generates a RSA public key
     def generate_public_key(self, private_key):
         publickey = self.private_key.publickey().export_key()
         return publickey
@@ -61,6 +73,7 @@ class User:
         transaction = Transaction(self.wallet, recipient, value, coin)
         return self.create_transaction(transaction)
 
+    #this checks to make sure all users in a transaction have the correct amount of currency in thier wallets, then signs and send transaction to useres node object
     def create_transaction(self, transaction_data: Transaction):
         # if self.check_transaction(transaction_data) != True:
         #     return ValueError
@@ -74,6 +87,7 @@ class User:
         self.node.send({"transaction": new_transaction.to__dict()})
         return new_transaction
 
+    #Checks to make sure user has the correct amount of currency in thier wallet before a transaction
     def check_transaction(self, transaction_data):
         if self.public_key != self.wallet.owner_public:
             return NameError
@@ -89,6 +103,7 @@ class User:
                 return ValueError
         return True
 
+    #signs a transaction as a wallet
     def sign_transaction(self, transaction: Transaction):
         transaction.sign_transaction(self.private_key)
         return transaction

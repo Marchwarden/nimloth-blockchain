@@ -14,6 +14,10 @@ from ..wallet_files.wallet import Wallet
 # unneccessary class - should be removed
 @dataclass
 class TransactionData:
+    #a basic dataclass for holding data from a transaction
+    #holds a recipient:str-which is the address of the recipient
+    #coin:str -the name of the coin sent
+    #value:str a str represent the amount of a coin spent
     def __init__(self):
         recipient: str
         coin: str
@@ -23,12 +27,23 @@ class TransactionData:
 # neccessary class should be expanded upon
 @dataclass
 class TransactionInput:
+    """This is the class generator for a transactions inputs
+    Attributes:
+    transaction_data:-data containing the recipient, coin, and value all in string format
+    output_index: an integer to refrence what transaction outputs were used to create this transaction input
+    transaction_hash:hashed string of current transaction
+    publick_key: a byte object refrencing the public key of the person creating the transaction
+    signature: the signature of the person who created the transaction
+    Returns:
+        _type_: _description_
+    """
     transaction_data: TransactionData
     output_index: int
     transaction_hash: str
     public_key: bytes
     signature: bytes = None
 
+    #returns a jsonified version of all data in the transaction inputs
     def _to_json(self) -> str:
         if self.signature is None:
             return json.dumps(
@@ -51,6 +66,10 @@ class TransactionInput:
 
 @dataclass
 class TransactionOutput:
+    #a basic dataclass for holding data from a transactionoutput
+    #amount:int - an int showing how much of the coin is outputted
+    #cointype:str -the type of coin used in this transaction
+    #the public key of the reciever of the transaction
     amount: int
     coin_type: str
     public_key_hash: str
@@ -58,6 +77,15 @@ class TransactionOutput:
 
 @dataclass
 class TransactionNew:
+    """TransactionNew: this is the transaction class which holds the inputs and outputs of a transaction, this is what is passed to the blockchain transaction
+    Attributes:
+        Sender: a Wallet object of the person sending the transaction
+        Inputs: a list of transaction inputs which are needed for this transaction
+        Outputs: a list of all transaction outputs created by this transaction
+        Time: time of transaction
+    Returns:
+        _type_: _description_
+    """
     sender: Wallet  # this is now the wallet address(could possibly change to wallet object)
     inputs: list[TransactionInput]
     outputs: list[TransactionOutput]
@@ -87,6 +115,7 @@ class TransactionNew:
 
     # # TODO: this is an old transaction signing
     # TODO fix sign transaction to represent addreses rather than public keys
+    #uses senders private key to sign and verify a transaction
     def sign_transaction(self, privatekey) -> str:
         transaction_data = self.to_bytes()
         signer = pkcs1_15.new(privatekey)
@@ -102,7 +131,7 @@ class TransactionNew:
 #
 #
 #
-#
+#old transaction class
 @dataclass
 class Transaction:
     sender: Wallet  # this is now the wallet address(could possibly change to wallet object)
