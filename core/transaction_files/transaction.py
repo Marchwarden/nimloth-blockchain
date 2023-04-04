@@ -187,3 +187,5 @@ class Transaction:
         hash = SHA256.new(transaction_data)  # change var name
         signature = signer.sign(hash)
         self.signature = binascii.hexlify(signature).decode("utf-8")
+
+##multicoin transaction have it be a set of two transactions, all succeed or all fail, one transaction is one user takes outputs and puts them in admin coin wallet, the  sadmin wallet account the  intiates a secondary transaction taking stored outputs and sending them to original user, transactions are then put on a merkle tree and oublished to block

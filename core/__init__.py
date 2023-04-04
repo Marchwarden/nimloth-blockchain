@@ -38,13 +38,16 @@ def create_app(test_config=None):
     def user():
         curr_user = User()
         if request.method == "POST":
+            recipient = request.form.get("recipient")
+            amount = request.form.get("amount")
+            coin = request.form.get("coin")
             if request.form["submit_button"] == "add_transaction":
-                recipient = request.args.get("recipient")
-                amount = request.args.get("amount")
-                coin = request.args.get("coin")
+                print("this is the coin")
+                print(request.args.get("coin"), flush=True)
                 transaction = curr_user.generate_transaction(recipient, coin, amount)
+                print(coin, flush=True)
                 block_chain.add_new_transaction(transaction)
-                return curr_user.private_key.exportKey("PEM")
+                return transaction._to_dict()
             if request.form["submit_button"] == "set_user":
                 privatekey = request.args.get("privatekey")
                 curr_user.set_keys(privatekey)
