@@ -25,6 +25,8 @@ WORKDIR /usr/src/
 
 USER nimloth 
 
+EXPOSE 5000
+
 ENTRYPOINT [ "./.venv/bin/python" ]
 CMD ["run.py"]
 

@@ -1,0 +1,40 @@
+
+<html>
+    <body>
+       
+       <form action = "http://localhost:8000/wallet" method = "post">
+          <p><h2>This is whats currently in your wallet</h2></p>
+          
+          <p><h1>Nimloth wallet</h1><p>
+            <tr>
+              <th> {{ "this is whats in your Nimloth wallet currently"}} </th>
+              <td> {{ user.wallet,getnimwallet()}} </td>
+            </tr>
+         <p><h1>Private wallets</h1><p>
+            <tr>
+              <th> {{ "this is whats in your private wallet currently"}} </th>
+              <td> {{ user.wallet,getnimwallet()}} </td>
+            </tr>
+          <p><input type = "text" name = "sender" value = "sender" /></p>
+          <p><input type = "text" name = "reciever" value = "reciever" /></p>
+          <p><input type = "text" name = "amount" value = "amount" /></p>
+          <p><input type = "text" name = "coin" value = "coin" /></p>
+          <p><input type = "submit" name = "submit_button" value = "add_transaction" /></p>
+       </form>
+       <table border =1 >
+         
+ 
+          <tr>
+             <th> {{ "this is the current block"}} </th>
+             <td> {{ current_block.hash}} </td>
+          </tr>
+          <tr>
+             <th> {{ "this is the previous block hash"}} </th>
+             <td> {{ block_chain.get_previous_hash()}} </td>
+          </tr>
+          
+     
+       </table>
+    </body>
+    
+ </html>

@@ -5,7 +5,7 @@ from ..block_files.block import NimlothBlock
 
 FILENAME = "blockchainjson"
 
-
+#pulls jsonified data from txt file and turns it into a blockchain object
 def get_blockchain_from_memory():
     with open(FILENAME, "r") as file_obj:
         blocks_text = file_obj.read()
@@ -29,7 +29,7 @@ def get_blockchain_from_memory():
 def get_block_from_memory(block_object):
     json.loads(block_object)
 
-
+#stores entirety of blokcchain data in txt file
 def store_blockchain_in_memory(blockchain: Blockchain):
     text = json.dumps(blockchain.to_dict()).encode("utf-8")
     with open("blockchaintes", "wb") as file_obj:
